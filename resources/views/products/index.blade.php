@@ -17,6 +17,7 @@
                     <tr>
                         <th>Barcode</th>
                         <th>Nama</th>
+                        <th>Vendor</th>
                         <th>Harga Beli</th>
                         <th>Harga Jual</th>
                         <th>Stok</th>
@@ -30,6 +31,7 @@
                     <tr>
                         <td>{{ $product->barcode }}</td>
                         <td>{{ $product->name }}</td>
+                        <td>{{ $product->vendor->name ?? '-' }}</td>
                         <td>Rp {{ number_format($product->purchase_price, 0, ',', '.') }}</td>
                         <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                         <td>
@@ -64,7 +66,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted">
+                        <td colspan="9" class="text-center text-muted">
                             Belum ada produk
                         </td>
                     </tr>

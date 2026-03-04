@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Vendor;
 
 class Product extends Model
 {
@@ -14,5 +15,11 @@ class Product extends Model
         'stock',
         'description',
         'image',
+        'vendor_id'
     ];
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
 }

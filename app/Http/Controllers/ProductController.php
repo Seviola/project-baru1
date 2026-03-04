@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Vendor;
 
 class ProductController extends Controller
 {
@@ -12,16 +13,17 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('vendor')->get();
         return view('products.index', compact('products'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('products.create');
+        $vendors = Vendor::all();
+        return view('products.create', compact('vendors'));
     }
 
     /**
@@ -63,7 +65,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        $vendors = Vendor::all();
+        return view('products.edit', compact('product', 'vendors'));
     }
 
     /**
