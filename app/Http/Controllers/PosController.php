@@ -13,7 +13,7 @@ class PosController extends Controller
 {
     public function index()
     {
-        $products = Product::where('stock', '>', 0)->get();
+        $products = Product::orderBy('name')->get();
         return view('pos.index', compact('products'));
     }
 

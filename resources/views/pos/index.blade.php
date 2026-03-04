@@ -85,14 +85,19 @@ document.addEventListener("DOMContentLoaded", function () {
                             ${p.description ? p.description : ''}
                         </small>
 
+                        <p class="text-secondary small">
+                            Stock : ${p.stock}
+                        </p>
+
                         <div class="mt-auto">
                             <p class="text-success fw-bold">
                                 Rp ${Number(p.price).toLocaleString('id-ID')}
                             </p>
 
                             <button class="btn btn-primary w-100"
-                                    onclick="addToCart(${p.id})">
-                                Tambah
+                                    onclick="addToCart(${p.id})"
+                                    ${p.stock == 0 ? 'disabled' : ''}>
+                                ${p.stock == 0 ? 'Habis' : 'Tambah'}
                             </button>
                         </div>
 
@@ -108,13 +113,25 @@ document.addEventListener("DOMContentLoaded", function () {
         const existing = cart.find(item => item.id === id);
 
         if(existing){
+
+        if(existing.qty >= product.stock){
+            alert("Stock tidak cukup");
+            return;
+        }
             existing.qty += 1;
+
         }else{
+
+        if(product.stock <= 0){
+            alert("Stock habis!");
+            return;
+        }
             cart.push({
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                qty: 1
+                qty: 1,
+                stock: product.stock 
             });
         }
         renderCart();
@@ -230,8 +247,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.increaseQty = function(index){
-    cart[index].qty += 1;
-    renderCart();
+        let item = cart[index];
+        
+        if(item.qty >= item.stock){
+            alert("Stock tidak cukup!");
+            return;
+        }
+        item.qty += 1;
+        renderCart();
     }
 
     window.decreaseQty = function(index){
