@@ -105,11 +105,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.addToCart = function(id) {
         const product = products.find(p => p.id === id);
-        cart.push(product);
+        const existing = cart.find(item => item.id === id);
+
+        if(existing){
+            existing.qty += 1;
+        }else{
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                qty: 1
+            });
+        }
         renderCart();
     }
 
     function renderCart() {
+
         cartList.innerHTML = '';
         let total = 0;
 
@@ -120,12 +132,37 @@ document.addEventListener("DOMContentLoaded", function () {
             </li>`;
         }
 
-        cart.forEach((item) => {
-            total += item.price;
+        cart.forEach((item, index) => {
+
+            let subtotal = item.price * item.qty;
+            total += subtotal;
+
             cartList.innerHTML += `
-                <li class="list-group-item d-flex justify-content-between">
-                    ${item.name}
-                    <span>Rp ${Number(item.price).toLocaleString('id-ID')}</span>
+                <li class="list-group-item">
+
+                    <div class="d-flex justify-content-between">
+                        <strong>${item.name}</strong>
+                        <strong>
+                            Rp ${subtotal.toLocaleString('id-ID')}
+                        </strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-1">
+
+                        <small>
+                            ${item.qty} x Rp ${item.price.toLocaleString('id-ID')}
+                        </small>
+
+                        <div>
+                            <button class="btn btn-sm btn-danger"
+                                onclick="decreaseQty(${index})">-</button>
+
+                            <button class="btn btn-sm btn-success"
+                                onclick="increaseQty(${index})">+</button>
+                        </div>
+
+                    </div>
+
                 </li>
             `;
         });
@@ -138,13 +175,14 @@ document.addEventListener("DOMContentLoaded", function () {
         let items = [];
 
         cart.forEach(item => {
-            total += item.price;
+            let subtotal = item.price * item.qty;
+            total += subtotal;
 
             items.push({
                 id: item.id,
                 name: item.name,
                 price: item.price,
-                qty: 1 // Sementara hanya 1, bisa dikembangkan untuk qty lebih dari 1
+                qty: item.qty // Sementara hanya 1, bisa dikembangkan untuk qty lebih dari 1
             });
         });
 
@@ -189,6 +227,22 @@ document.addEventListener("DOMContentLoaded", function () {
         renderCart();
         payInput.value = '';
         changeText.innerText = 'Rp 0';
+    }
+
+    window.increaseQty = function(index){
+    cart[index].qty += 1;
+    renderCart();
+    }
+
+    window.decreaseQty = function(index){
+
+        if(cart[index].qty > 1){
+            cart[index].qty -= 1;
+        }else{
+            cart.splice(index,1);
+        }
+
+        renderCart();
     }
     
 
