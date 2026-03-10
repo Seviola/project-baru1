@@ -16,7 +16,7 @@ class PosController extends Controller
         $products = Product::where('stock', '>', 0)
             ->orderBy('name')
             ->get();
-        return view('pos.index', compact('products'));
+        return view('pos.index', compactkasir ('products'));
     }
 
     public function store(Request $request)
