@@ -44,7 +44,7 @@ class ProductController extends Controller
         'vendor_id' => $request->vendor_id, // PENTING
         'purchase_price' => $request->purchase_price,
         'price' => $request->price,
-        'stock' => 0,
+        'stock' => $request->stock,
         'description' => $request->description,
         'image' => $data['image'] ?? null
     ]);

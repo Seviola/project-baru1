@@ -59,6 +59,14 @@
                         </div>
 
                         <div class="mb-3">
+                            <label>Stock</label>
+                            <input type="number"
+                                    name="stock"
+                                    class="form-control"
+                                    value="{{ $product->stock }}">
+                        </div>
+
+                        <div class="mb-3">
                             <label>Keterangan</label>
                             <textarea name="description" class="form-control">{{ $product->description }}</textarea>
                         </div>
