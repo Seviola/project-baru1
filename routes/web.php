@@ -46,3 +46,11 @@ use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/register', [RegisterController::class, 'showRegister']);
 Route::post('/register', [RegisterController::class, 'register']);
+
+Route::resource('vendor', VendorController::class)->except(['show']);
+
+Route::get('/restock', [RestockController::class, 'index'])->name('restock.index');
+Route::post('/restock', [RestockController::class, 'store'])->name('restock.store');
+Route::patch('/restock/{vendorProduct}/approve', [RestockController::class, 'approve'])->name('restock.approve');
+Route::patch('/restock/{vendorProduct}/reject', [RestockController::class, 'reject'])->name('restock.reject');
+Route::get('/restock/history', [RestockController::class, 'history'])->name('restock.history');
