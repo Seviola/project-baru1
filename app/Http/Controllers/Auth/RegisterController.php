@@ -24,7 +24,7 @@ class RegisterController extends Controller
         ]);
 
         Vendor::create([
-            'name' => $request->vendor_name,
+            'name' => $request->company,
             'user_id' => $user->id
         ]);
 

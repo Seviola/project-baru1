@@ -72,6 +72,20 @@
             </a>
           </li>
 
+          <li class="pc-item">
+            <a href="{{ route('vendor.index') }}" class="pc-link">
+                <span class="pc-micon"><i class="ti ti-building-store"></i></span>
+                <span class="pc-mtext">Vendor</span>
+            </a>
+          </li>
+
+          <li class="pc-item">
+              <a href="{{ route('restock.index') }}" class="pc-link">
+                  <span class="pc-micon"><i class="ti ti-arrows-transfer-up"></i></span>
+                  <span class="pc-mtext">Restock</span>
+              </a>
+          </li>
+
           <li class="pc-item pc-caption">
             <label>UI Components</label>
             <i class="ti ti-dashboard"></i>
