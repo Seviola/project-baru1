@@ -81,7 +81,9 @@
 
           <li class="pc-item">
               <a href="{{ route('restock.index') }}" class="pc-link">
-                  <span class="pc-micon"><i class="ti ti-arrows-transfer-up"></i></span>
+                  <span class="pc-micon">
+                    <i class="ti ti-truck-delivery"></i>
+                  </span>
                   <span class="pc-mtext">Restock</span>
               </a>
           </li>
@@ -207,7 +209,7 @@
           <li class="pc-h-item d-none d-md-inline-flex">
             <form class="header-search">
               <i data-feather="search" class="icon-search"></i>
-              <input type="search" class="form-control" placeholder="Search here. . .">
+              <input type="search" id="search-product" class="form-control" placeholder="Search here. . .">
             </form>
           </li>
         </ul>

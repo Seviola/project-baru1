@@ -46,6 +46,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const products = @json($products);
+    let filteredProducts = [...products];
 
     const productList = document.getElementById('product-list');
     const cartList = document.getElementById('cart-list');
@@ -55,10 +56,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let cart = [];
 
+    const searchInput = document.getElementById('search-product');
+
+    if(searchInput){
+
+        searchInput.addEventListener('keyup', function(){
+
+            let keyword = this.value.toLowerCase();
+
+            filteredProducts = products.filter(p =>
+                p.name.toLowerCase().includes(keyword) ||
+                (p.barcode && p.barcode.toLowerCase().includes(keyword))
+            );
+
+            renderProducts();
+        });
+
+    }
+
     function renderProducts() {
     productList.innerHTML = '';
 
-    products.forEach(function(p) {
+    filteredProducts.forEach(function(p) {
 
         let imageHtml = '';
 
