@@ -13,10 +13,8 @@ class PosController extends Controller
 {
     public function index()
     {
-        $products = Product::where('stock', '>', 0)
-            ->orderBy('name')
-            ->get();
-        return view('pos.index', compactkasir ('products'));
+        $products = Product::orderBy('name')->get();
+        return view('pos.index', compact('products'));
     }
 
     public function store(Request $request)
@@ -46,5 +44,60 @@ class PosController extends Controller
     {
         $transaction = Transaction::with('items')->findOrFail($id);
         return view('pos.receipt_print', compact('transaction'));
+    }
+
+    public function checkout(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $transaction = Transaction::create([
+                'invoice' => 'INV' . time(),
+                'total' => $request->total,
+                'pay' => $request->pay,
+                'change' => $request->change
+            ]);
+
+            foreach ($request->items as $item) {
+
+                $product = Product::find($item['id']);
+
+                if (!$product) {
+                    continue;
+                }
+
+                if ($product->stock < $item['qty']) {
+                    return response()->json([
+                        'error' => 'Stock tidak cukup untuk ' . $product->name
+                    ]);
+                }
+
+                TransactionItem::create([
+                    'transaction_id' => $transaction->id,
+                    'product_name' => $product->name,
+                    'price' => $item['price'],
+                    'qty' => $item['qty'],
+                    'subtotal' => $item['price'] * $item['qty']
+                ]);
+
+                $product->stock -= $item['qty'];
+                $product->save();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'transaction_id' => $transaction->id
+            ]);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

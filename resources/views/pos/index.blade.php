@@ -188,6 +188,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.payNow = function() {
+        if(cart.length === 0 ){
+            alert("Keranjang masih kosong!");
+            return;
+        }
+
         let total = 0;
         let items = [];
 
@@ -204,6 +209,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const pay = parseInt(payInput.value) || 0;
+
+        if(pay <= 0){
+            alert('Masukkan jumlah pembayaran!');
+            return;
+        }
 
         if (pay < total) {
             alert('Uang kurang!');
@@ -236,7 +246,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             window.location.href = "/kasir/receipt/" + data.transaction_id;
-        });
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Terjadi kesalahan saat transaksi")
+        })
     }
 
     window.resetCart = function() {

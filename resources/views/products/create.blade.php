@@ -48,6 +48,11 @@
                         </div>
 
                         <div class="mb-3">
+                            <label>Stock</label>
+                            <input type="number" name="stock" class="from-control" value="0">
+                        </div>
+
+                        <div class="mb-3">
                             <label>Keterangan Produk</label>
                             <textarea name="description" 
                                     class="form-control" 
