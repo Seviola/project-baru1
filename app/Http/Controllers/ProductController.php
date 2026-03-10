@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Vendor;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -22,7 +23,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $vendors = Vendor::all();
+        $vendors = \App\Models\Vendor::all();
         return view('products.create', compact('vendors'));
     }
 
@@ -31,25 +32,25 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'barcode' => 'required|unique:products',
-            'name' => 'required',
-            'purchase_price' => 'required|numeric',
-            'price' => 'required|numeric',
-            'stock' => 'required|numeric',
-            'description' => 'nullable',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
-        $data = $request->all();
+    $data = $request->all();
 
-        if ($request->hasFile('image')) {
+    if ($request->hasFile('image')) {
         $data['image'] = $request->file('image')->store('products', 'public');
     }
-        
-        Product::create($data);
 
-        return redirect()->route('products.index')
-            ->with('success', 'Produk berhasil ditambahkan');
+    Product::create([
+        'barcode' => $request->barcode,
+        'name' => $request->name,
+        'vendor_id' => $request->vendor_id, // PENTING
+        'purchase_price' => $request->purchase_price,
+        'price' => $request->price,
+        'stock' => 0,
+        'description' => $request->description,
+        'image' => $data['image'] ?? null
+    ]);
+
+    return redirect()->route('products.index')
+        ->with('success','Produk berhasil ditambahkan');
     }
 
     /**
@@ -63,9 +64,11 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
+        $product = Product::findOrFail($id);
         $vendors = Vendor::all();
+
         return view('products.edit', compact('product', 'vendors'));
     }
 

@@ -13,61 +13,33 @@ class PosController extends Controller
 {
     public function index()
     {
-        $products = Product::orderBy('name')->get();
+        $products = Product::where('stock', '>', 0)
+            ->orderBy('name')
+            ->get();
         return view('pos.index', compact('products'));
     }
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
+        $data = $request->all();
 
-        try {
-
-            $transaction = Transaction::create([
-                'invoice' => 'INV' . time(),
-                'total' => $request->total,
-                'pay' => $request->pay,
-                'change' => $request->change,
-            ]);
-
-            foreach ($request->items as $item) {
-
-                $product = Product::findOrFail($item['id']);
-
-                // Cek stok cukup atau tidak
-                if ($product->stock < $item['qty']) {
-                    return response()->json([
-                        'error' => 'Stok tidak cukup untuk ' . $product->name
-                    ], 400);
-                }
-
-                // Simpan item transaksi
-                TransactionItem::create([
-                    'transaction_id' => $transaction->id,
-                    'product_name' => $product->name,
-                    'price' => $product->price,
-                    'qty' => $item['qty'],
-                    'subtotal' => $product->price * $item['qty'],
-                ]);
-
-                // Kurangi stok
-                $product->decrement('stock', $item['qty']);
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'transaction_id' => $transaction->id
-            ]);
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            return response()->json([
-                'error' => $e->getMessage()
-            ], 500);
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
+
+        Product::create([
+            'barcode' => $request->barcode,
+            'name' => $request->name,
+            'vendor_id' => $request->vendor_id,
+            'purchase_price' => $request->purchase_price,
+            'price' => $request->price,
+            'stock' => 0,
+            'description' => $request->description,
+            'image' => $data['image'] ?? null
+        ]);
+
+        return redirect()->route('products.index')
+            ->with('success', 'Produk berhasil ditambahkan');
     }
 
     public function receipt($id)

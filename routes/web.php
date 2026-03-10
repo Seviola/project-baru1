@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\RestockController;
+use App\Http\Controllers\VendorController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/home', [PageController::class, 'home'])->middleware('auth');
@@ -32,3 +35,25 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::resource('products', ProductController::class);
+
+Route::get('/restock', [RestockController::class, 'index'])
+    ->middleware('auth')
+    ->name('restock.index');
+
+Route::post('/restock', [RestockController::class, 'store'])
+    ->middleware('auth')
+    ->name('restock.store');
+
+Route::get('/vendor/restock', function () {
+
+    $products = Product::all();
+
+    return view('vendor.restock', compact('products'));
+});
+
+Route::post('/vendor/restock', [VendorController::class, 'restock']);
+
+use App\Http\Controllers\Auth\RegisterController;
+
+Route::get('/register', [RegisterController::class, 'showRegister']);
+Route::post('/register', [RegisterController::class, 'register']);

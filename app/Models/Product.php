@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Vendor;
 
 class Product extends Model
 {
-    protected $fillable =[
-        'barcode',
+    use HasFactory;
+
+    protected $fillable = [
         'name',
-        'purchase_price',
+        'barcode',
         'price',
         'stock',
+        'purchase_price',
         'description',
         'image',
         'vendor_id'
@@ -20,6 +23,6 @@ class Product extends Model
 
     public function vendor()
     {
-        return $this->belongsTo(Vendor::class);
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 }

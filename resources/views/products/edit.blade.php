@@ -59,13 +59,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Stock</label>
-                            <input type="number" name="stock" 
-                                   value="{{ $product->stock }}" 
-                                   class="form-control">
-                        </div>
-
-                        <div class="mb-3">
                             <label>Keterangan</label>
                             <textarea name="description" class="form-control">{{ $product->description }}</textarea>
                         </div>

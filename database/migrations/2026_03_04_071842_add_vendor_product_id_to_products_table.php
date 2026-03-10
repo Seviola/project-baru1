@@ -12,17 +12,20 @@ return new class extends Migration
     public function up()
     {
     Schema::table('products', function (Blueprint $table) {
-        $table->foreignId('vendor_id')
+        $table->foreignId('vendor_product_id')
               ->nullable()
               ->constrained()
               ->onDelete('set null');
     });
     }
-    public function down()
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-    Schema::table('products', function (Blueprint $table) {
-        $table->dropForeign(['vendor_id']);
-        $table->dropColumn('vendor_id');
-    });
+        Schema::table('products', function (Blueprint $table) {
+            //
+        });
     }
 };

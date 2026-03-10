@@ -51,34 +51,35 @@
               <h3 class="mb-0"><b>Sign up</b></h3>
               <a href="{{ url('/home/login') }}" class="link-primary">Already have an account?</a>
             </div>
+            <form method="POST" action="{{ url('/register') }}">
+            @csrf
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group mb-3">
                   <label class="form-label">First Name*</label>
-                  <input type="text" class="form-control" placeholder="First Name">
+                  <input type="text" name="first_name" class="form-control" placeholder="First Name">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group mb-3">
                   <label class="form-label">Last Name</label>
-                  <input type="text" class="form-control" placeholder="Last Name">
+                  <input type="text" name="last_name" class="form-control" placeholder="Last Name">
                 </div>
               </div>
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Company</label>
-              <input type="text" class="form-control" placeholder="Company">
+              <input type="text" name="company" class="form-control" placeholder="Company">
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Email Address*</label>
-              <input type="email" class="form-control" placeholder="Email Address">
+              <input type="email" name="email" class="form-control" placeholder="Email Address">
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Password</label>
-              <input type="password" class="form-control" placeholder="Password">
+              <input type="password" name="password" class="form-control" placeholder="Password">
             </div>
             <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
-            <form action="{{ url('home/login') }}" method="GET">
             <div class="d-grid mt-3">
               <button type="submit" class="btn btn-primary">Create Account</button>
             </div>

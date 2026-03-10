@@ -17,6 +17,14 @@ return new class extends Migration
             $table->string('barcode')->nullable();
             $table->integer('price');
             $table->integer('stock')->default(0);
+
+            $table->unsignedBigInteger('vendor_id')->nullable();
+
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('vendors')
+                ->onDelete('set null');
+
             $table->timestamps();
         });
     }
