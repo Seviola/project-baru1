@@ -193,7 +193,7 @@
           <li class="pc-h-item d-none d-md-inline-flex">
             <form class="header-search">
               <i data-feather="search" class="icon-search"></i>
-              <input type="search" class="form-control" placeholder="Search here. . .">
+              <input type="search" id="search-product" class="form-control" placeholder="Search here. . .">
             </form>
           </li>
         </ul>
