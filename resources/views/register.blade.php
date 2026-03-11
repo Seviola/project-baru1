@@ -68,17 +68,48 @@
               </div>
             </div>
             <div class="form-group mb-3">
-              <label class="form-label">Company</label>
-              <input type="text" name="company" class="form-control" placeholder="Company">
-            </div>
-            <div class="form-group mb-3">
               <label class="form-label">Email Address*</label>
-              <input type="email" name="email" class="form-control" placeholder="Email Address">
+              <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                     placeholder="Email Address" value="{{ old('email') }}">
+              @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
             </div>
             <div class="form-group mb-3">
-              <label class="form-label">Password</label>
-              <input type="password" name="password" class="form-control" placeholder="Password">
+              <label class="form-label">Password*</label>
+              <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                     placeholder="Password">
+              @error('password')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
             </div>
+            <div class="form-group mb-3">
+              <label class="form-label">Konfirmasi Password*</label>
+              <input type="password" name="password_confirmation" class="form-control"
+                     placeholder="Ulangi Password">
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label">Role*</label>
+              <select name="role" class="form-select @error('role') is-invalid @enderror" required>
+                <option value="">-- Pilih Role --</option>
+                <option value="admin"  {{ old('role') == 'admin'  ? 'selected' : '' }}>Admin</option>
+                <option value="kasir"  {{ old('role') == 'kasir'  ? 'selected' : '' }}>Kasir</option>
+                <option value="vendor" {{ old('role') == 'vendor' ? 'selected' : '' }}>Vendor</option>
+                <option value="user"   {{ old('role') == 'user'   ? 'selected' : '' }}>User</option>
+              </select>
+              @error('role')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+            @if($errors->any())
+            <div class="alert alert-danger py-2">
+                <ul class="mb-0 ps-3">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
             <div class="d-grid mt-3">
               <button type="submit" class="btn btn-primary">Create Account</button>

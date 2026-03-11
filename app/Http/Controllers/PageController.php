@@ -42,6 +42,10 @@ class PageController extends Controller
                 return redirect('/home');
             } elseif ($user->role == 'kasir') {
                 return redirect('/kasir');
+            } elseif ($user->role == 'vendor') {
+                return redirect('/restock');
+            } elseif ($user->role == 'user') {
+                return redirect('/kasir');
             }
         }
 
