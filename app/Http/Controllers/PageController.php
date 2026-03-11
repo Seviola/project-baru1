@@ -5,12 +5,53 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Product;
+use App\Models\Transaction;
+use App\Models\TransactionItem;
+use App\Models\Vendor;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
     public function home()
     {
-        return view('home');
+        $totalProducts = Product::count();
+        $totalTransactions = Transaction::count();
+        $totalVendors = Vendor::count();
+
+        $todayIncome = Transaction::whereDate('created_at', today())->sum('total');
+
+        $lowStockProducts = Product::where('stock','<',5)
+                            ->orderBy('stock','asc')
+                            ->limit(5)
+                            ->get();
+
+        $topProducts = TransactionItem::select(
+                'product_name',
+                DB::raw('SUM(qty) as total_sold')
+            )
+            ->groupBy('product_name')
+            ->orderByDesc('total_sold')
+            ->get();
+
+        $weeklySales = Transaction::select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('SUM(total) as total')
+            )
+            ->whereDate('created_at','>=', now()->subDays(7))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        return view('home', compact(
+            'totalProducts',
+            'totalTransactions',
+            'totalVendors',
+            'todayIncome',
+            'lowStockProducts',
+            'topProducts',
+            'weeklySales'
+        ));
     }
     public function iconTabler()
     {
