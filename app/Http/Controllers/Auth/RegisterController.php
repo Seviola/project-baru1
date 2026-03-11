@@ -12,22 +12,35 @@ class RegisterController extends Controller
 {
     public function showRegister()
     {
-        return view('auth.register');
+        return view('register');
     }
 
     public function register(Request $request)
     {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'nullable|string|max:255',
+            'email'      => 'required|email|unique:users,email',
+            'password'   => 'required|min:6|confirmed',
+            'role'       => 'required|in:admin,kasir,vendor,user',
+        ]);
+
         $user = User::create([
-            'name' => $request->first_name.' '.$request->last_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'name'     => $request->first_name . ' ' . $request->last_name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'role'     => $request->role,
         ]);
 
-        Vendor::create([
-            'name' => $request->company,
-            'user_id' => $user->id
-        ]);
+        // Jika role vendor, otomatis buat data vendor
+        if ($request->role === 'vendor') {
+            Vendor::create([
+                'name'    => $request->first_name . ' ' . $request->last_name,
+                'email'   => $request->email,
+                'user_id' => $user->id,
+            ]);
+        }
 
-        return redirect('/login');
+        return redirect('/login')->with('success', 'Akun berhasil dibuat, silakan login!');
     }
 }

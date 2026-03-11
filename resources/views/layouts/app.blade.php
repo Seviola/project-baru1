@@ -50,130 +50,97 @@
       </div>
       <div class="navbar-content">
         <ul class="pc-navbar">
-          <li class="pc-item">
-            <a href="{{ url('/home') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
-              <span class="pc-mtext">Dashboard</span>
-            </a>
-          </li>
+            {{-- Dashboard - semua role --}}
+            <li class="pc-item">
+                <a href="{{ url('/home') }}" class="pc-link">
+                    <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
+                    <span class="pc-mtext">Dashboard</span>
+                </a>
+            </li>
 
-          <li class="pc-item">
-            <a href="{{ url('/kasir') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
-              <span class="pc-mtext">Kasir</span>
-            </a>
-          </li>
+            {{-- Kasir - admin, kasir, user --}}
+            @auth
+            @if(Auth::user()->hasRole('admin', 'kasir', 'user'))
+            <li class="pc-item">
+                <a href="{{ url('/kasir') }}" class="pc-link {{ request()->is('kasir*') ? 'active' : '' }}">
+                    <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
+                    <span class="pc-mtext">Kasir</span>
+                </a>
+            </li>
+            @endif
+            @endauth
 
-          <li class="pc-item">
-            <a href="{{ route('products.index') }}" 
-              class="pc-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
-              <span class="pc-micon"><i class="ti ti-box"></i></span>
-              <span class="pc-mtext">Products</span>
-            </a>
-          </li>
+            {{-- Products - admin & kasir --}}
+            @auth
+            @if(Auth::user()->hasRole('admin', 'kasir'))
+            <li class="pc-item">
+                <a href="{{ route('products.index') }}"
+                  class="pc-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                    <span class="pc-micon"><i class="ti ti-box"></i></span>
+                    <span class="pc-mtext">Products</span>
+                </a>
+            </li>
+            @endif
+            @endauth
 
-          <li class="pc-item">
-            <a href="{{ route('vendor.index') }}" class="pc-link">
-                <span class="pc-micon"><i class="ti ti-building-store"></i></span>
-                <span class="pc-mtext">Vendor</span>
-            </a>
-          </li>
+            {{-- Vendor Master - admin & vendor --}}
+            @auth
+            @if(Auth::user()->hasRole('admin', 'vendor'))
+            <li class="pc-item">
+                <a href="{{ route('vendor.index') }}"
+                  class="pc-link {{ request()->routeIs('vendor.*') ? 'active' : '' }}">
+                    <span class="pc-micon"><i class="ti ti-building-store"></i></span>
+                    <span class="pc-mtext">Vendor</span>
+                </a>
+            </li>
+            @endif
+            @endauth
 
-          <li class="pc-item">
-              <a href="{{ route('restock.index') }}" class="pc-link">
-                  <span class="pc-micon">
-                    <i class="ti ti-truck-delivery"></i>
-                  </span>
-                  <span class="pc-mtext">Restock</span>
-              </a>
-          </li>
-
-          <li class="pc-item pc-caption">
-            <label>UI Components</label>
-            <i class="ti ti-dashboard"></i>
-          </li>
-          <li class="pc-item">
-            <a href="{{ url('/home/bc_typography') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-typography"></i></span>
-              <span class="pc-mtext">Typography</span>
-            </a>
-          </li>
-          <li class="pc-item">
-            <a href="{{ url('/home/bc_color') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-color-swatch"></i></span>
-              <span class="pc-mtext">Color</span>
-            </a>
-          </li>
-          <li class="pc-item">
-            <a href="{{ url('/home/icon-tabler') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-plant-2"></i></span>
-              <span class="pc-mtext">Icons</span>
-            </a>
-          </li>
-
-          <li class="pc-item pc-caption">
-            <label>Pages</label>
-            <i class="ti ti-news"></i>
-          </li>
-          <li class="pc-item">
-            <a href="{{ url('/home/login') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-lock"></i></span>
-              <span class="pc-mtext">Login</span>
-            </a>
-          </li>
-          <li class="pc-item">
-            <a href="{{ url('/home/register') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
-              <span class="pc-mtext">Register</span>
-            </a>
-          </li>
-
-          <li class="pc-item pc-caption">
-            <label>Other</label>
-            <i class="ti ti-brand-chrome"></i>
-          </li>
-          <li class="pc-item pc-hasmenu">
-            <a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-menu"></i></span><span class="pc-mtext">Menu
-                levels</span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-            <ul class="pc-submenu">
-              <li class="pc-item"><a class="pc-link" href="#!">Level 2.1</a></li>
-              <li class="pc-item pc-hasmenu">
-                <a href="#!" class="pc-link">Level 2.2<span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-                <ul class="pc-submenu">
-                  <li class="pc-item"><a class="pc-link" href="#!">Level 3.1</a></li>
-                  <li class="pc-item"><a class="pc-link" href="#!">Level 3.2</a></li>
-                  <li class="pc-item pc-hasmenu">
-                    <a href="#!" class="pc-link">Level 3.3<span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-                    <ul class="pc-submenu">
-                      <li class="pc-item"><a class="pc-link" href="#!">Level 4.1</a></li>
-                      <li class="pc-item"><a class="pc-link" href="#!">Level 4.2</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li class="pc-item pc-hasmenu">
-                <a href="#!" class="pc-link">Level 2.3<span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-                <ul class="pc-submenu">
-                  <li class="pc-item"><a class="pc-link" href="#!">Level 3.1</a></li>
-                  <li class="pc-item"><a class="pc-link" href="#!">Level 3.2</a></li>
-                  <li class="pc-item pc-hasmenu">
-                    <a href="#!" class="pc-link">Level 3.3<span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
-                    <ul class="pc-submenu">
-                      <li class="pc-item"><a class="pc-link" href="#!">Level 4.1</a></li>
-                      <li class="pc-item"><a class="pc-link" href="#!">Level 4.2</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li class="pc-item">
-            <a href="{{ url('/home/sample-page') }}" class="pc-link">
-              <span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
-              <span class="pc-mtext">Sample page</span>
-            </a>
-          </li>
+            {{-- Restock - admin & vendor --}}
+            @auth
+            @if(Auth::user()->hasRole('admin', 'vendor'))
+            <li class="pc-item">
+                <a href="{{ route('restock.index') }}"
+                  class="pc-link {{ request()->routeIs('restock.*') ? 'active' : '' }}">
+                    <span class="pc-micon"><i class="ti ti-truck-delivery"></i></span>
+                    <span class="pc-mtext">Restock</span>
+                </a>
+            </li>
+            @endif
+            @endauth
         </ul>
+        {{-- UI Components - semua role bisa akses --}}
+        <li class="pc-item pc-caption">
+            <label>UI Components</label>
+        </li>
+
+        <li class="pc-item">
+            <a href="{{ url('/home/icon-tabler') }}" class="pc-link {{ request()->is('home/icon-tabler') ? 'active' : '' }}">
+                <span class="pc-micon"><i class="ti ti-plant-2"></i></span>
+                <span class="pc-mtext">Icons</span>
+            </a>
+        </li>
+
+        <li class="pc-item">
+            <a href="{{ url('/home/bc_typography') }}" class="pc-link {{ request()->is('home/bc_typography') ? 'active' : '' }}">
+                <span class="pc-micon"><i class="ti ti-typography"></i></span>
+                <span class="pc-mtext">Typography</span>
+            </a>
+        </li>
+
+        <li class="pc-item">
+            <a href="{{ url('/home/bc_color') }}" class="pc-link {{ request()->is('home/bc_color') ? 'active' : '' }}">
+                <span class="pc-micon"><i class="ti ti-color-swatch"></i></span>
+                <span class="pc-mtext">Color</span>
+            </a>
+        </li>
+
+        <li class="pc-item">
+            <a href="{{ url('/home/sample-page') }}" class="pc-link {{ request()->is('home/sample-page') ? 'active' : '' }}">
+                <span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
+                <span class="pc-mtext">Sample Page</span>
+            </a>
+        </li>
       </div>
     </div>
   </nav>
@@ -388,10 +355,10 @@
     <div class="footer-wrapper container-fluid">
       <div class="row">
         <div class="col-sm my-1">
-          <p class="m-0">Seviola &#9829; Indah &#931; Safitri &#9827; <a href="https://themeforest.net/user/codedthemes" target="_blank">PENS</a></p>
+          <p class="m-0">Seviola &#9829; dan &#931; Kifli &#9827;, <a href="https://themeforest.net/user/codedthemes" target="_blank">PENS</a></p>
         </div>
         <div class="col-sm my-1">
-          <p class="m-0">Belajar Laravel <a href="https://themewagon.com" target="_blank">Semangat brooo</a></p>
+          <p class="m-0">Belajar Laravel <a href="https://themewagon.com" target="_blank">Project Kasir</a></p>
         </div>
         <div class="col-auto my-1">
           <ul class="list-inline footer-link mb-0">
