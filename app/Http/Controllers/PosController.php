@@ -8,13 +8,38 @@ use App\Models\TransactionItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PosController extends Controller
 {
     public function index()
     {
         $products = Product::orderBy('name')->get();
-        return view('pos.index', compact('products'));
+
+        $today = Carbon::today()->toDateString();
+        $userId = auth()->id();
+
+        $todayTransactions = Transaction::where('user_id', $userId)
+            ->whereDate('created_at', $today);
+        
+            $totalToday = $todayTransactions->sum('total');
+
+            $alreadyDeposited = Transaction::where('user_id', $userId)
+                ->whereDate('created_at', $today)
+                ->where('is_deposited', 1)
+                ->sum('total');
+
+        $notDeposited = Transaction::where('user_id', $userId)
+            ->whereDate('created_at', $today)
+            ->where('is_deposited', 0)
+            ->sum('total');
+
+        return view('pos.index', compact(
+            'products', 
+            'totalToday', 
+            'alreadyDeposited', 
+            'notDeposited'
+        ));
     }
 
     public function store(Request $request)
@@ -42,7 +67,7 @@ class PosController extends Controller
 
     public function receipt($id)
     {
-        $transaction = Transaction::with('items')->findOrFail($id);
+        $transaction = Transaction::with('items','user')->findOrFail($id);
         return view('pos.receipt_print', compact('transaction'));
     }
 
@@ -53,6 +78,7 @@ class PosController extends Controller
         try {
 
             $transaction = Transaction::create([
+                'user_id' => auth()->id(), //kasir yang login
                 'invoice' => 'INV' . time(),
                 'total' => $request->total,
                 'pay' => $request->pay,

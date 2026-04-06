@@ -56,6 +56,7 @@
 
     <p>Invoice : {{ $transaction->invoice }}</p>
     <p>{{ $transaction->created_at }}</p>
+    <p>Kasir: {{ $transaction->user->name }}</p>
 
     <hr>
 
