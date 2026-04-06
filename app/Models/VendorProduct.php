@@ -12,6 +12,12 @@ class VendorProduct extends Model
         'stock',
         'status',
         'approved_stock',
+        'payment_status',
+        'paid_at',
+    ];
+
+    protected $casts = [
+        'paid_at' => 'datetime',
     ];
 
     public function vendor()

@@ -9,15 +9,11 @@ use App\Models\VendorProduct;
 
 class RestockController extends Controller
 {
-    // =============================================
-    // HALAMAN 1: Vendor kirim stok ke vendor_products
-    // =============================================
     public function index()
     {
         $vendors  = Vendor::all();
         $products = Product::orderBy('name')->get();
 
-        // Daftar pengiriman stok dari vendor yang belum disetujui
         $pending = VendorProduct::with(['vendor', 'product'])
             ->where('status', 'pending')
             ->latest()
@@ -26,7 +22,6 @@ class RestockController extends Controller
         return view('restock.index', compact('vendors', 'products', 'pending'));
     }
 
-    // Vendor kirim stok (simpan ke vendor_products dengan status pending)
     public function store(Request $request)
     {
         $request->validate([
@@ -36,19 +31,17 @@ class RestockController extends Controller
         ]);
 
         VendorProduct::create([
-            'vendor_id'  => $request->vendor_id,
-            'product_id' => $request->product_id,
-            'stock'      => $request->stock,
-            'status'     => 'pending',
+            'vendor_id'      => $request->vendor_id,
+            'product_id'     => $request->product_id,
+            'stock'          => $request->stock,
+            'status'         => 'pending',
+            'payment_status' => 'pending',
         ]);
 
         return redirect()->route('restock.index')
             ->with('success', 'Stok berhasil dikirim, menunggu persetujuan admin.');
     }
 
-    // =============================================
-    // HALAMAN 2: Admin sortir stok masuk ke kasir
-    // =============================================
     public function approve(Request $request, VendorProduct $vendorProduct)
     {
         $request->validate([
@@ -57,12 +50,10 @@ class RestockController extends Controller
 
         $approvedQty = $request->approved_stock;
 
-        // Tambah stok ke produk
         $product = $vendorProduct->product;
         $product->stock += $approvedQty;
         $product->save();
 
-        // Update status dan catat berapa yang disetujui
         $vendorProduct->update([
             'approved_stock' => $approvedQty,
             'status'         => 'approved',
@@ -80,16 +71,45 @@ class RestockController extends Controller
             ->with('success', 'Pengiriman stok ditolak.');
     }
 
-    // =============================================
-    // HALAMAN 3: Riwayat semua restock
-    // =============================================
-    public function history()
+    // Tandai pembayaran sudah lunas
+    public function markPaid(VendorProduct $vendorProduct)
     {
-        $history = VendorProduct::with(['vendor', 'product'])
-            ->whereIn('status', ['approved', 'rejected'])
-            ->latest()
-            ->paginate(15);
+        $vendorProduct->update([
+            'payment_status' => 'paid',
+            'paid_at'        => now(),
+        ]);
 
-        return view('restock.history', compact('history'));
+        return redirect()->route('restock.history')
+            ->with('success', 'Pembayaran berhasil ditandai sebagai lunas.');
+    }
+
+    // Riwayat restock dengan filter payment status
+    public function history(Request $request)
+    {
+        $query = VendorProduct::with(['vendor', 'product'])
+            ->whereIn('status', ['approved', 'rejected']);
+
+        // Filter berdasarkan payment_status
+        if ($request->filled('payment')) {
+            $query->where('payment_status', $request->payment);
+        }
+
+        // Filter berdasarkan tanggal
+        if ($request->filled('dari')) {
+            $query->whereDate('created_at', '>=', $request->dari);
+        }
+        if ($request->filled('sampai')) {
+            $query->whereDate('created_at', '<=', $request->sampai);
+        }
+
+        $history = $query->latest()->paginate(15)->withQueryString();
+
+        // Hitung ringkasan
+        $totalPending = VendorProduct::where('status', 'approved')
+            ->where('payment_status', 'pending')->count();
+        $totalPaid = VendorProduct::where('status', 'approved')
+            ->where('payment_status', 'paid')->count();
+
+        return view('restock.history', compact('history', 'totalPending', 'totalPaid'));
     }
 }
