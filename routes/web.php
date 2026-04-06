@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/restock/history', [RestockController::class, 'history'])->name('restock.history');
         Route::patch('/restock/{vendorProduct}/approve', [RestockController::class, 'approve'])->name('restock.approve');
         Route::patch('/restock/{vendorProduct}/reject', [RestockController::class, 'reject'])->name('restock.reject');
+        Route::patch('/restock/{vendorProduct}/paid', [RestockController::class, 'markPaid'])->name('restock.markPaid');
 
         // Products (admin)
         Route::resource('products', ProductController::class);
@@ -99,15 +100,3 @@ Route::get('/vendor/restock', function () {
     return view('vendor.restock', compact('products'));
 });
 Route::post('/vendor/restock', [VendorController::class, 'restock']);
-
-Route::middleware('auth')->group(function () {
-
-    // ✅ Halaman umum - semua role
-    Route::get('/home', [PageController::class, 'home']);
-    Route::get('/home/icon-tabler', [PageController::class, 'iconTabler']);
-    Route::get('/home/bc_typography', [PageController::class, 'typography']);
-    Route::get('/home/bc_color', [PageController::class, 'color']);
-    Route::get('/home/sample-page', [PageController::class, 'samplePage']);
-
-    // Route role admin, kasir, vendor, user di bawahnya...
-});

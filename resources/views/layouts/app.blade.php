@@ -102,7 +102,7 @@
             <li class="pc-item">
                 <a href="{{ route('restock.index') }}"
                   class="pc-link {{ request()->routeIs('restock.*') ? 'active' : '' }}">
-                    <span class="pc-micon"><i class="ti ti-truck-delivery"></i></span>
+                    <span class="pc-micon"><i class="ti ti-refresh"></i></span>
                     <span class="pc-mtext">Restock</span>
                 </a>
             </li>
