@@ -42,8 +42,8 @@
     <!-- Tambahan -->
     <div class="row mb-3">
 
-        <div class="col-md-4 offset-md-8">
-            <div class="card bg-success text-white">
+        <div class="col-md-4">
+            <div class="card text-white" style="background-color: #8afc20;">
                 <div class="card-body">
                     <h5>Pendapatan Hari Ini</h5>
                     <h3>Rp {{ number_format($totalToday) }}</h3>
@@ -52,7 +52,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card bg-primary text-white">
+            <div class="card text-white" style="background-color: #82f0ff;">
                 <div class="card-body">
                     <h5>Sudah Disetor</h5>
                     <h3>Rp {{ number_format($alreadyDeposited) }}</h3>
@@ -61,7 +61,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card bg-danger text-white">
+            <div class="card text-white" style="background-color: #ff677d;">
                 <div class="card-body">
                     <h5>Belum Disetor</h5>
                     <h3>Rp {{ number_format($notDeposited) }}</h3>
