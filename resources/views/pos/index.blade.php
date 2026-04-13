@@ -69,6 +69,10 @@
             </div>
         </div>
 
+        <button class="btn btn-warning w-100 mb-3" onclick="setorUang()">
+            Setor Uang
+        </button>
+
     </div>
 </div>
 @endsection
@@ -236,6 +240,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         cartTotal.innerText = 'Rp ' + total.toLocaleString('id-ID');
+    }
+
+    window.setorUang = function(){
+
+    if(!confirm("Yakin ingin menyetor hari ini?")){
+        return;
+    }
+    fetch("/kasir/setor", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        location.reload();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Terjadi kesalahan");
+    });
+
     }
 
     window.payNow = function() {
