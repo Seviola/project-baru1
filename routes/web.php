@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/kasir', [PosController::class, 'index'])->name('kasir.index');
         Route::post('/kasir/checkout', [PosController::class, 'checkout']);
         Route::get('/kasir/receipt/{id}', [PosController::class, 'receipt']);
+        Route::post('/kasir/setor', [PosController::class, 'setor'])->name('kasir.setor');
     });
 
     Route::middleware('role:admin,kasir')->group(function () {
