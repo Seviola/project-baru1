@@ -8,6 +8,7 @@ use App\Models\TransactionItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class PosController extends Controller
@@ -15,29 +16,30 @@ class PosController extends Controller
     public function index()
     {
         $products = Product::orderBy('name')->get();
+        $userId = Auth::id();
+        $today = Carbon::today();
 
-        $today = Carbon::today()->toDateString();
-        $userId = auth()->id();
+        // Total hari ini
+        $totalToday = Transaction::where('user_id', $userId)
+            ->whereDate('created_at', $today)
+            ->sum('total');
 
-        $todayTransactions = Transaction::where('user_id', $userId)
-            ->whereDate('created_at', $today);
-        
-            $totalToday = $todayTransactions->sum('total');
+        // Sudah disetor
+        $alreadyDeposited = Transaction::where('user_id', $userId)
+            ->whereDate('created_at', $today)
+            ->where('is_deposited', 1)
+            ->sum('total');
 
-            $alreadyDeposited = Transaction::where('user_id', $userId)
-                ->whereDate('created_at', $today)
-                ->where('is_deposited', 1)
-                ->sum('total');
-
+        // Belum disetor
         $notDeposited = Transaction::where('user_id', $userId)
             ->whereDate('created_at', $today)
             ->where('is_deposited', 0)
             ->sum('total');
 
         return view('pos.index', compact(
-            'products', 
-            'totalToday', 
-            'alreadyDeposited', 
+            'products',
+            'totalToday',
+            'alreadyDeposited',
             'notDeposited'
         ));
     }
@@ -82,7 +84,8 @@ class PosController extends Controller
                 'invoice' => 'INV' . time(),
                 'total' => $request->total,
                 'pay' => $request->pay,
-                'change' => $request->change
+                'change' => $request->change,
+                'is_deposited' => 0
             ]);
 
             foreach ($request->items as $item) {
@@ -125,5 +128,21 @@ class PosController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    public function setor()
+    {
+        $userId = auth()->id();
+        $today = Carbon::today();
+
+        Transaction::where('user_id', $userId)
+            ->whereDate('created_at', $today)
+            ->where('is_deposited', 0)
+            ->update([
+                'is_deposited' => 1
+            ]);
+        return response()->json([
+            'message' => 'Uang berhasil disetor!'
+        ]);
     }
 }
