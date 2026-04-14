@@ -13,7 +13,8 @@ class Transaction extends Model
         'total',
         'pay',
         'change',
-        'is_deposited'
+        'is_deposited',
+        'created_at',
     ];
 
     public function items()
@@ -23,6 +24,6 @@ class Transaction extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 }

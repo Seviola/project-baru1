@@ -132,17 +132,13 @@ class PosController extends Controller
 
     public function setor()
     {
-        $userId = auth()->id();
-        $today = Carbon::today();
-
-        Transaction::where('user_id', $userId)
-            ->whereDate('created_at', $today)
+        \App\Models\Transaction::where('user_id', auth()->id())
+            ->whereDate('created_at', now())
             ->where('is_deposited', 0)
-            ->update([
-                'is_deposited' => 1
-            ]);
+            ->update(['is_deposited' => 1]);
+
         return response()->json([
-            'message' => 'Uang berhasil disetor!'
+            'message' => 'Setoran berhasil yee'
         ]);
     }
 }

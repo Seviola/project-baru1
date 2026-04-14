@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\RestockController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\ReportController;
 use App\Models\Product;
 
 // =============================================
@@ -57,6 +58,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/kasir', [PosController::class, 'index'])->name('kasir.index');
         Route::post('/kasir/checkout', [PosController::class, 'checkout']);
         Route::get('/kasir/receipt/{id}', [PosController::class, 'receipt']);
+
+        // Report (admin)
+        Route::get('/report', [ReportController::class, 'dailyReport']);
+        Route::get('/report/pdf', [ReportController::class, 'downloadPdf']);
+        Route::get('/report/setoran', [ReportController::class, 'depositReport'])
+                ->name('report.setoran');
     });
 
     // =============================================
@@ -83,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin,kasir')->group(function () {
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+        Route::get('/report/setoran', [ReportController::class, 'depositReport']);
     });
 
     // =============================================
