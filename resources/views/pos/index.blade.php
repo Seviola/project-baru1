@@ -69,10 +69,17 @@
             </div>
         </div>
 
-        <button class="btn btn-warning w-100 mb-3" onclick="setorUang()">
-            Setor Uang
-        </button>
+        <div class="d-flex gap-2 mb-3">
 
+            <button class="btn btn-outline-warning" onclick="setorUang()">
+                Setor Uang
+            </button>
+
+            <a href="/report/setoran" class="btn btn-outline-info">
+                Report Setoran Saya
+            </a>
+
+        </div>
     </div>
 </div>
 @endsection
