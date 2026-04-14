@@ -23,6 +23,20 @@
       <!-- [ breadcrumb ] end -->
       <!-- [ Main Content ] start -->
       <div class="row">
+        @if(auth()->user()->isAdmin())
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5>Report Kasir</h5>
+
+            <a href="/report" class="btn btn-primary">Report Harian Penjualan</a>
+
+            <a href="/report/setoran" class="btn btn-success">
+                Report Setoran Kasir
+            </a>
+          </div>
+        </div>
+        @endif
+
         <!-- [ sample-page ] start -->
         <div class="col-md-6 col-xl-3">
           <div class="card">
