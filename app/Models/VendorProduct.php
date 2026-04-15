@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class VendorProduct extends Model
 {
     protected $fillable = [
+        'batch_id', 
         'vendor_id',
         'product_id',
         'stock',
