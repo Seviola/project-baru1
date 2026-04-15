@@ -51,6 +51,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/kasir', [PosController::class, 'index'])->name('kasir.index');
         Route::post('/kasir/checkout', [PosController::class, 'checkout']);
         Route::get('/kasir/receipt/{id}', [PosController::class, 'receipt']);
+
+        // Report (admin)
+        Route::get('/report', [ReportController::class, 'dailyReport']);
+        Route::get('/report/pdf', [ReportController::class, 'downloadPdf']);
+        Route::get('/report/setoran', [ReportController::class, 'depositReport'])
+                ->name('report.setoran');
     });
 
     // VENDOR & ADMIN
@@ -65,7 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/kasir', [PosController::class, 'index'])->name('kasir.index');
         Route::post('/kasir/checkout', [PosController::class, 'checkout']);
         Route::get('/kasir/receipt/{id}', [PosController::class, 'receipt']);
-        Route::get('/kasir/setor', [PosController::class, 'setor']);
+        Route::post('/kasir/setor', [PosController::class, 'setor'])->name('kasir.setor');
     });
 
     // KASIR & ADMIN
@@ -73,6 +79,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
         Route::get('/report/setoran', [ReportController::class, 'depositReport']);
+    });
+
+    // =============================================
+    // USER - tambahan dari main
+    // =============================================
+    Route::middleware('role:admin,user')->group(function () {
+        // user hanya akses halaman umum
     });
 
 });
