@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Vendor;
 use App\Models\VendorProduct;
+use Illuminate\Support\Str;
 
 class RestockController extends Controller
 {
@@ -14,10 +15,16 @@ class RestockController extends Controller
         $vendors  = Vendor::all();
         $products = Product::orderBy('name')->get();
 
-        $pending = VendorProduct::with(['vendor', 'product'])
+        // Ambil pending, kelompokkan per batch_id
+        $pendingRaw = VendorProduct::with(['vendor', 'product'])
             ->where('status', 'pending')
             ->latest()
             ->get();
+
+        // Kelompokkan: yang punya batch_id digabung, yang tidak punya tetap sendiri
+        $pending = $pendingRaw->groupBy(function ($item) {
+            return $item->batch_id ?? 'single_' . $item->id;
+        });
 
         return view('restock.index', compact('vendors', 'products', 'pending'));
     }
@@ -25,23 +32,78 @@ class RestockController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'vendor_id'  => 'required|exists:vendors,id',
-            'product_id' => 'required|exists:products,id',
-            'stock'      => 'required|integer|min:1',
+            'vendor_id'          => 'required|exists:vendors,id',
+            'items'              => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.stock'      => 'required|integer|min:1',
         ]);
 
-        VendorProduct::create([
-            'vendor_id'      => $request->vendor_id,
-            'product_id'     => $request->product_id,
-            'stock'          => $request->stock,
-            'status'         => 'pending',
-            'payment_status' => 'pending',
-        ]);
+        $batchId = 'BATCH-' . strtoupper(Str::random(8));
 
+        // Gabungkan stok jika produk sama
+        $merged = [];
+        foreach ($request->items as $item) {
+            $pid = $item['product_id'];
+            if (isset($merged[$pid])) {
+                $merged[$pid] += $item['stock']; // tambah stok jika produk sama
+            } else {
+                $merged[$pid] = $item['stock'];
+            }
+        }
+
+        foreach ($merged as $productId => $totalStock) {
+            VendorProduct::create([
+                'batch_id'       => $batchId,
+                'vendor_id'      => $request->vendor_id,
+                'product_id'     => $productId,
+                'stock'          => $totalStock,
+                'status'         => 'pending',
+                'payment_status' => 'pending',
+            ]);
+        }
+
+        $count = count($merged);
         return redirect()->route('restock.index')
-            ->with('success', 'Stok berhasil dikirim, menunggu persetujuan admin.');
+            ->with('success', "Berhasil mengirim {$count} jenis produk, menunggu persetujuan admin.");
     }
 
+    // Approve semua item dalam 1 batch sekaligus
+    public function approveBatch(Request $request, $batchId)
+    {
+        $items = VendorProduct::where('batch_id', $batchId)
+            ->where('status', 'pending')
+            ->with('product')
+            ->get();
+
+        foreach ($items as $item) {
+            $approvedQty = $request->input("approved_stock_{$item->id}", $item->stock);
+            $approvedQty = min($approvedQty, $item->stock);
+
+            $item->product->stock += $approvedQty;
+            $item->product->save();
+
+            $item->update([
+                'approved_stock' => $approvedQty,
+                'status'         => 'approved',
+            ]);
+        }
+
+        return redirect()->route('restock.index')
+            ->with('success', 'Semua produk dalam batch berhasil disetujui.');
+    }
+
+    // Reject semua item dalam 1 batch
+    public function rejectBatch($batchId)
+    {
+        VendorProduct::where('batch_id', $batchId)
+            ->where('status', 'pending')
+            ->update(['status' => 'rejected']);
+
+        return redirect()->route('restock.index')
+            ->with('success', 'Batch pengiriman stok ditolak.');
+    }
+
+    // Approve single item (untuk data lama tanpa batch_id)
     public function approve(Request $request, VendorProduct $vendorProduct)
     {
         $request->validate([
@@ -50,9 +112,8 @@ class RestockController extends Controller
 
         $approvedQty = $request->approved_stock;
 
-        $product = $vendorProduct->product;
-        $product->stock += $approvedQty;
-        $product->save();
+        $vendorProduct->product->stock += $approvedQty;
+        $vendorProduct->product->save();
 
         $vendorProduct->update([
             'approved_stock' => $approvedQty,
@@ -71,7 +132,6 @@ class RestockController extends Controller
             ->with('success', 'Pengiriman stok ditolak.');
     }
 
-    // Tandai pembayaran sudah lunas
     public function markPaid(VendorProduct $vendorProduct)
     {
         $vendorProduct->update([
@@ -83,18 +143,14 @@ class RestockController extends Controller
             ->with('success', 'Pembayaran berhasil ditandai sebagai lunas.');
     }
 
-    // Riwayat restock dengan filter payment status
     public function history(Request $request)
     {
         $query = VendorProduct::with(['vendor', 'product'])
             ->whereIn('status', ['approved', 'rejected']);
 
-        // Filter berdasarkan payment_status
         if ($request->filled('payment')) {
             $query->where('payment_status', $request->payment);
         }
-
-        // Filter berdasarkan tanggal
         if ($request->filled('dari')) {
             $query->whereDate('created_at', '>=', $request->dari);
         }
@@ -102,9 +158,13 @@ class RestockController extends Controller
             $query->whereDate('created_at', '<=', $request->sampai);
         }
 
-        $history = $query->latest()->paginate(15)->withQueryString();
+        $historyRaw = $query->latest()->get();
 
-        // Hitung ringkasan
+        // Kelompokkan per batch_id
+        $history = $historyRaw->groupBy(function ($item) {
+            return $item->batch_id ?? 'single_' . $item->id;
+        });
+
         $totalPending = VendorProduct::where('status', 'approved')
             ->where('payment_status', 'pending')->count();
         $totalPaid = VendorProduct::where('status', 'approved')
@@ -112,4 +172,49 @@ class RestockController extends Controller
 
         return view('restock.history', compact('history', 'totalPending', 'totalPaid'));
     }
+
+    // Invoice single item
+    public function invoice(VendorProduct $vendorProduct)
+    {
+        $restock = $vendorProduct->load(['vendor', 'product']);
+        // Jika punya batch_id, redirect ke invoice batch
+        if ($restock->batch_id) {
+            return redirect()->route('restock.invoiceBatch', $restock->batch_id);
+        }
+        $items  = collect([$restock]);
+        $vendor = $restock->vendor;
+        $batchNo = 'RST-' . str_pad($restock->id, 5, '0', STR_PAD_LEFT);
+        return view('restock.invoice', compact('items', 'vendor', 'batchNo'));
+    }
+
+    // Invoice batch (banyak produk)
+    public function invoiceBatch($batchId)
+    {
+        $items = VendorProduct::with(['vendor', 'product'])
+            ->where('batch_id', $batchId)
+            ->get();
+
+        if ($items->isEmpty()) {
+            abort(404);
+        }
+
+        $vendor  = $items->first()->vendor;
+        $batchNo = $batchId;
+        return view('restock.invoice', compact('items', 'vendor', 'batchNo'));
+    }
+
+    public function markPaidBatch($batchId)
+    {
+        VendorProduct::where('batch_id', $batchId)
+            ->where('status', 'approved')
+            ->where('payment_status', 'pending')
+            ->update([
+                'payment_status' => 'paid',
+                'paid_at'        => now(),
+            ]);
+
+        return redirect()->route('restock.history')
+            ->with('success', 'Semua produk dalam batch berhasil ditandai lunas.');
+    }
+
 }
