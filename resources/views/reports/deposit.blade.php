@@ -4,9 +4,15 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-0">Report Setoran Kasir</h3>
-        <button onclick="history.back()" class="btn btn-outline-secondary">
-            &larr; Kembali
-        </button>
+        @if(auth()->user()->isAdmin())
+            <a href="{{ url('/home') }}" class="btn btn-outline-dark mb-3">
+                &larr; Kembali
+            </a>
+        @else
+            <a href="{{ url('/kasir') }}" class="btn btn-outline-dark mb-3">
+                &larr; Kembali
+            </a>
+        @endif
     </div>
 
     <!-- FILTER -->

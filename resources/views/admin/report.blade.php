@@ -48,9 +48,9 @@
         Versi pdf
     </a>
 
-    <button onclick="history.back()" class="btn btn-outline-dark mb-3">
-        <-Kembali
-    </button>
+    <a href="{{ url('/home') }}" class="btn btn-outline-dark mb-3">
+        &larr; Kembali
+    </a>
     
 </div>
 @endsection
