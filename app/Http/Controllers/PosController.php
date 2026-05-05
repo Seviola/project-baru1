@@ -87,8 +87,6 @@ class PosController extends Controller
                 'items' => 'required|array'
             ]);
 
-            DB::beginTransaction();
-
             $transaction = Transaction::create([
                 'invoice' => 'KW-' . date('YmdHis'),
                 'student_name' => $request->student_name,
@@ -102,26 +100,24 @@ class PosController extends Controller
 
             foreach($request->items as $item){
 
+                $product = Product::find($item['id']);
+
                 TransactionItem::create([
                     'transaction_id' => $transaction->id,
                     'product_id' => $item['id'],
-                    'product_name' => $item['name'].' -'.$item['class_type'],
+                    'product_name' => $item['name'],
+                    'class_type' => $product ? $product->class_type : '-',
                     'price' => $item['price'],
                     'qty' => $item['qty'],
                     'subtotal' => $item['price'] * $item['qty']
                 ]);
             }
 
-            DB::commit();
-
             return response()->json([
                 'transaction_id' => $transaction->id
             ]);
 
-        } catch(\Exception $e){
-
-            DB::rollback();
-
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage()
             ]);

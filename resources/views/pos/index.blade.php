@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             
                             <div>
                                 <strong>${item.name}</strong><br>
-                                <small>${item.class_type}</small><br>
+                                <small>${item.class_type}</small>
                                 <small>Rp ${item.price.toLocaleString('id-ID')}</small>
                             </div>
 

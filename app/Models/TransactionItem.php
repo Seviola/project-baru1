@@ -13,6 +13,7 @@ class TransactionItem extends Model
         'transaction_id',
         'product_id',
         'product_name',
+        'class_type',
         'price',
         'qty',
         'subtotal'
