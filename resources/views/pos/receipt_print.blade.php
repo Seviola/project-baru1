@@ -1,43 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Struk Pembayaran</title>
+    <title>Kwitansi</title>
 
     <style>
         body {
-            font-family: monospace;
-            width: 300px;
+            margin: 0;
+            font-family: "Times New Roman", serif;
+        }
+
+        .paper {
+            width: 1000px;
+            height: 450px;
             margin: auto;
-            font-size: 12px;
+            position: relative;
         }
 
-        h3, p {
-            text-align: center;
-            margin: 2px 0;
-        }
-
-        table {
+        /* BACKGROUND IMAGE */
+        .bg {
             width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
         }
 
-        td {
-            padding: 2px 0;
+        /* TEXT OVERLAY */
+        .text {
+            position: absolute;
+            z-index: 2;
+            font-size: 16px;
+            color: #000;
         }
 
-        .right {
-            text-align: right;
+        .bold {
+            font-weight: bold;
         }
 
-        hr {
-            border: none;
-            border-top: 1px dashed black;
-            margin: 5px 0;
-        }
+        /* POSISI TEXT (atur sesuai gambar kamu) */
+        .no        { top: 85px; left: 300px; }
+        .nama      { top: 130px; left: 300px; }
+        .uang      { top: 175px; left: 300px; width: 600px; }
+        .untuk     { top: 235px; left: 300px; width: 600px; }
+        .jumlah    { top: 310px; left: 300px; font-size: 20px; font-weight: bold; }
+        .metode    { top: 350px; left: 300px; }
+
+        .tanggal   { top: 300px; right: 80px; }
 
         @media print {
-            button {
-                display: none;
-            }
+            button { display: none; }
         }
     </style>
 </head>
@@ -45,65 +57,52 @@
 <body onload="window.print()">
 
 <script>
-    window.onafterprint = function() {
-        window.location.href = "/kasir";
-    };
+window.onafterprint = function(){
+    window.location.href="/kasir";
+}
 </script>
 
-    <h3>TOKO Sevi & Kifli</h3>
-    <p>Jl. Manyor No. 1</p>
-    <hr>
+<div class="paper">
 
-    <p>Invoice : {{ $transaction->invoice }}</p>
-    <p>{{ $transaction->created_at }}</p>
-    <p>Kasir: {{ $transaction->user->name }}</p>
+    <!-- BACKGROUND -->
+    <img src="{{ asset('assets/images/Scomptec.png') }}" class="bg">
 
-    <hr>
+    <!-- DATA -->
+    <div class="text no">
+        {{ $transaction->invoice }}
+    </div>
 
-    <table>
+    <div class="text nama">
+        {{ $transaction->student_name }}
+    </div>
+
+    <div class="text uang">
+        {{ number_format($transaction->total,0,',','.') }} Rupiah
+    </div>
+
+    <div class="text untuk">
         @foreach($transaction->items as $item)
-        <tr>
-            <td colspan="2">{{ $item->product_name }}</td>
-        </tr>
-        <tr>
-            <td>{{ $item->qty }} x {{ number_format($item->price,0,',','.') }}</td>
-            <td class="right">
-                {{ number_format($item->subtotal,0,',','.') }}
-            </td>
-        </tr>
+            {{ $item->product_name }} x{{ $item->qty }}@if(!$loop->last), @endif
         @endforeach
-    </table>
+    </div>
 
-    <hr>
+    <div class="text jumlah">
+        Rp {{ number_format($transaction->total,0,',','.') }}
+    </div>
 
-    <table>
-        <tr>
-            <td>Total</td>
-            <td class="right">
-                Rp {{ number_format($transaction->total,0,',','.') }}
-            </td>
-        </tr>
-        <tr>
-            <td>Bayar</td>
-            <td class="right">
-                Rp {{ number_format($transaction->pay,0,',','.') }}
-            </td>
-        </tr>
-        <tr>
-            <td>Kembalian</td>
-            <td class="right">
-                Rp {{ number_format($transaction->change,0,',','.') }}
-            </td>
-        </tr>
-    </table>
+    <div class="text metode">
+        {{ $transaction->payment_method }}
+    </div>
 
-    <hr>
+    <div class="text tanggal">
+        {{ date('d F Y', strtotime($transaction->created_at)) }}
+    </div>
 
-    <p>Terima Kasih 🙏</p>
-    <p>Selamat menikmati makanan yang sudah anda beli!</p>
-    <p>Kasir yang imott</p>
+</div>
 
+<center>
     <button onclick="window.print()">Print Ulang</button>
+</center>
 
 </body>
 </html>

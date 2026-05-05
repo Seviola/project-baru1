@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Models\Vendor;
-use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -14,7 +12,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('vendor')->get();
+        $products = Product::all();
         return view('products.index', compact('products'));
     }
     
@@ -22,9 +20,8 @@ class ProductController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        $vendors = \App\Models\Vendor::all();
-        return view('products.create', compact('vendors'));
+    { 
+        return view('products.create');
     }
 
     /**
@@ -32,26 +29,30 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-    $data = $request->all();
-
-    if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('products', 'public');
-    }
-
-    Product::create([
-        'barcode' => $request->barcode,
-        'name' => $request->name,
-        'vendor_id' => $request->vendor_id, // PENTING
-        'purchase_price' => $request->purchase_price,
-        'price' => $request->price,
-        'stock' => $request->stock,
-        'description' => $request->description,
-        'image' => $data['image'] ?? null
+    $request->validate([
+        'barcode' => 'required|unique:products,barcode',
+        'name' => 'required',
+        'class_type' => 'required',
+        'purchase_price' => 'required|numeric',
+        'price' => 'required|numeric',
+        'description' => 'nullable'
     ]);
 
+    $data = [
+        'barcode' => $request->barcode,
+        'name' => $request->name,
+        'class_type' => $request->class_type,
+        'purchase_price' => $request->purchase_price,
+        'price' => $request->price,
+        'description' => $request->description
+    ];
+
+    Product::create($data);
+
     return redirect()->route('products.index')
-        ->with('success','Produk berhasil ditambahkan');
+        ->with('success', 'Data kelas berhasil ditambahkan');
     }
+    
 
     /**
      * Display the specified resource.
@@ -67,9 +68,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $vendors = Vendor::all();
-
-        return view('products.edit', compact('product', 'vendors'));
+        return view('products.edit', compact('product'));
     }
 
     /**
@@ -80,27 +79,23 @@ class ProductController extends Controller
         $request->validate([
             'barcode' => 'required|unique:products,barcode,' . $product->id,
             'name' => 'required',
+            'class_type' => 'required',
             'purchase_price' => 'required|numeric',
-            'price' => 'required|numeric',
-            'stock' => 'required|numeric',
+            'price' => 'required',
             'description' => 'nullable',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        $data = $request->all();
-
-        if ($request->hasFile('image')) {
-
-            // hapus gambar lama jika ada
-            if ($product->image && \Storage::disk('public')->exists($product->image)) {
-                \Storage::disk('public')->delete($product->image);
-            }
-
-            $data['image'] = $request->file('image')->store('products', 'public');
-        }
+        $data = [
+            'barcode' => $request->barcode,
+            'name' => $request->name,
+            'class_type' => $request->class_type,
+            'purchase_price' => $request->purchase_price,
+            'price' => $request->price,
+            'description' => $request->description,
+        ];
 
         $product->update($data);
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diupdate');
+        return redirect()->route('products.index')->with('success', 'Data kelas berhasil diupdate');
     }
 
     /**
@@ -109,6 +104,6 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus');
+        return redirect()->route('products.index')->with('success', 'Data kelas berhasil dihapus');
     }
 }

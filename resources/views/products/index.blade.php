@@ -5,9 +5,9 @@
 <div class="container">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Master Produk</h5>
+            <h5 class="mb-0">Data Kelas</h5>
             <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm">
-                + Tambah Produk
+                + Tambah Kelas
             </a>
         </div>
 
@@ -16,12 +16,10 @@
                 <thead class="table-light">
                     <tr>
                         <th>Barcode</th>
-                        <th>Nama</th>
-                        <th>Vendor</th>
-                        <th>Harga Beli</th>
-                        <th>Harga Jual</th>
-                        <th>Stok</th>
-                        <th>Gambar</th>
+                        <th>Nama Kelas</th>
+                        <th>Pilih Kelas</th>
+                        <th>Biyaya Kursus</th>
+                        <th>Ruang Kelas</th>
                         <th>Keterangan</th>
                         <th width="150">Aksi</th>
                     </tr>
@@ -31,22 +29,9 @@
                     <tr>
                         <td>{{ $product->barcode }}</td>
                         <td>{{ $product->name }}</td>
-                        <td>{{ $product->vendor->name ?? '-' }}</td>
+                        <td>{{ $product->class_type }}</td>
                         <td>Rp {{ number_format($product->purchase_price, 0, ',', '.') }}</td>
-                        <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                        <td>
-                            <span class="badge bg-{{ $product->stock > 0 ? 'success' : 'danger' }}">
-                                {{ $product->stock }}
-                            </span>
-                        </td>
-                        <td>
-                        @if($product->image)
-                            <img src="{{ asset('storage/'.$product->image) }}" 
-                                width="60" 
-                                class="rounded">
-                        @endif
-                        </td>
-
+                        <td>{{ $product->price }}</td>
                         <td>{{ $product->description }}</td>
                         <td>
                             <a href="{{ route('products.edit', $product->id) }}" 
@@ -58,7 +43,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Hapus produk?')">
+                                    onclick="return confirm('Hapus kelas?')">
                                     Hapus
                                 </button>
                             </form>
@@ -67,7 +52,7 @@
                     @empty
                     <tr>
                         <td colspan="9" class="text-center text-muted">
-                            Belum ada produk
+                            Belum ada data kelas
                         </td>
                     </tr>
                     @endforelse

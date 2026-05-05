@@ -8,13 +8,14 @@ class Transaction extends Model
 {
     // protected $fillable = ['total_price', 'paid_amount', 'change_amount'];
     protected $fillable = [
-        'user_id',
         'invoice',
+        'student_name',
+        'payment_method',
         'total',
         'pay',
         'change',
-        'is_deposited',
-        'created_at',
+        'user_id',
+        'is_deposited'
     ];
 
     public function items()
@@ -24,6 +25,6 @@ class Transaction extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 }

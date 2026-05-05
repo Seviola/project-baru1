@@ -70,48 +70,46 @@ class PosController extends Controller
     public function receipt($id)
     {
         $transaction = Transaction::with('items','user')->findOrFail($id);
+
         return view('pos.receipt_print', compact('transaction'));
     }
 
     public function checkout(Request $request)
     {
-        DB::beginTransaction();
-
         try {
 
+            $request->validate([
+                'student_name' => 'required',
+                'payment_method' => 'required',
+                'total' => 'required|numeric',
+                'pay' => 'required|numeric',
+                'change' => 'required|numeric',
+                'items' => 'required|array'
+            ]);
+
+            DB::beginTransaction();
+
             $transaction = Transaction::create([
-                'user_id' => auth()->id(), //kasir yang login
-                'invoice' => 'INV' . time(),
+                'invoice' => 'KW-' . date('YmdHis'),
+                'student_name' => $request->student_name,
+                'payment_method' => $request->payment_method,
                 'total' => $request->total,
                 'pay' => $request->pay,
                 'change' => $request->change,
+                'user_id' => auth()->id(),
                 'is_deposited' => 0
             ]);
 
-            foreach ($request->items as $item) {
-
-                $product = Product::find($item['id']);
-
-                if (!$product) {
-                    continue;
-                }
-
-                if ($product->stock < $item['qty']) {
-                    return response()->json([
-                        'error' => 'Stock tidak cukup untuk ' . $product->name
-                    ]);
-                }
+            foreach($request->items as $item){
 
                 TransactionItem::create([
                     'transaction_id' => $transaction->id,
-                    'product_name' => $product->name,
+                    'product_id' => $item['id'],
+                    'product_name' => $item['name'],
                     'price' => $item['price'],
                     'qty' => $item['qty'],
                     'subtotal' => $item['price'] * $item['qty']
                 ]);
-
-                $product->stock -= $item['qty'];
-                $product->save();
             }
 
             DB::commit();
@@ -120,14 +118,37 @@ class PosController extends Controller
                 'transaction_id' => $transaction->id
             ]);
 
-        } catch (\Exception $e) {
+        } catch(\Exception $e){
 
-            DB::rollBack();
+            DB::rollback();
 
             return response()->json([
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    private function terbilang($angka)
+    {
+        $angka = abs($angka);
+        $baca = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+
+        if ($angka < 12)
+            return " " . $baca[$angka];
+        elseif ($angka < 20)
+            return $this->terbilang($angka - 10) . " belas";
+        elseif ($angka < 100)
+            return $this->terbilang($angka / 10) . " puluh" . $this->terbilang($angka % 10);
+        elseif ($angka < 200)
+            return " seratus" . $this->terbilang($angka - 100);
+        elseif ($angka < 1000)
+            return $this->terbilang($angka / 100) . " ratus" . $this->terbilang($angka % 100);
+        elseif ($angka < 2000)
+            return " seribu" . $this->terbilang($angka - 1000);
+        elseif ($angka < 1000000)
+            return $this->terbilang($angka / 1000) . " ribu" . $this->terbilang($angka % 1000);
+        elseif ($angka < 1000000000)
+            return $this->terbilang($angka / 1000000) . " juta" . $this->terbilang($angka % 1000000);
     }
 
     public function setor()

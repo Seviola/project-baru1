@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\RestockController;
 use App\Http\Controllers\VendorController;
@@ -34,7 +35,7 @@ Route::middleware('auth')->group(function () {
     // ================= ADMIN =================
     Route::middleware('role:admin')->group(function () {
 
-        // Vendor & Product
+        // Vendor & Class
         Route::resource('vendor', VendorController::class)->except(['show']);
         Route::resource('products', ProductController::class);
 
@@ -87,6 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
         Route::get('/report/setoran', [ReportController::class, 'depositReport']);
+        Route::get('/classroom', [ClassRoomController::class, 'index'])->name('classroom.index');
     });
 
     // ================= USER =================

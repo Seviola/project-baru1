@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    Tambah Produk
+                    Tambah Kelas
                 </div>
                 <div class="card-body">
 
@@ -22,53 +22,38 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Nama Produk</label>
+                            <label>Nama Kelas</label>
                             <input type="text" name="name" class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label>Vendor</label>
-                            <select name="vendor_id" class="form-control">
-                            <option value="">Pilih Vendor</option>
-                            @foreach($vendors as $vendor)
-                            <option value="{{ $vendor->id }}">
-                            {{ $vendor->name }}
-                            </option>
-                            @endforeach
+                            <label>Pilih Kelas</label>
+                            <select name="class_type" class="from-control">
+                                <option value="">-- Pilih Kelas --</option>
+                                <option value="Reguler">Reguler</option>
+                                <option value="Private">Private</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label>Harga Beli</label>
+                            <label>Biaya Kursus</label>
                             <input type="number" name="purchase_price" class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label>Harga Jual</label>
+                            <label>Ruang Kelas</label>
                             <input type="number" name="price" class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label>Stock</label>
-                            <input type="number" name="stock" class="from-control" value="0">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Keterangan Produk</label>
+                            <label>Keterangan</label>
                             <textarea name="description" 
                                     class="form-control" 
                                     rows="3"
-                                    placeholder="Masukkan deskripsi produk..."></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Gambar Produk</label>
-                            <input type="file" 
-                                name="image" 
-                                class="form-control">
+                                    placeholder="Masukkan keterangan kelas...."></textarea>
                         </div>
 
                         <button class="btn btn-success w-100">
-                            Simpan
+                            Simpan Kelas
                         </button>
 
                     </form>

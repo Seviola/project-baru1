@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Edit Produk')
+@section('title', 'Edit Kelas')
 
 @section('content')
 <div class="container mt-4">
@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-warning text-dark">
-                    Edit Produk
+                    Edit Kelas
                 </div>
 
                 <div class="card-body">
@@ -25,45 +25,34 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Nama Produk</label>
+                            <label>Nama Kelas</label>
                             <input type="text" name="name" 
                                    value="{{ $product->name }}" 
                                    class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label>Vendor</label>
-                            <select name="vendor_id" class="form-control">
-                                <option value="">-- Pilih Vendor --</option>
-                                @foreach($vendors as $vendor)
-                                    <option value="{{ $vendor->id }}"
-                                        {{ $product->vendor_id == $vendor->id ? 'selected' : '' }}>
-                                        {{ $vendor->name }}
-                                    </option>
-                                @endforeach
+                            <label>Pilih Kelas</label>
+                            <select name="class_type" class="form-control">
+                                <option value="">-- Pilih Kelas --</option>
+                                <option value="Reguler" {{ $product->class_type == 'Reguler' ? 'selected' : '' }}>Reguler</option>
+                                <option value="Private" {{ $product->class_type == 'Private' ? 'selected' : '' }}>Private</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label>Harga Beli</label>
+                            <label>Biaya Kursus</label>
                             <input type="number" name="purchase_price" 
                                    value="{{ $product->purchase_price }}" 
                                    class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label>Harga Jual</label>
+                            <label>Ruang Kelas</label>
                             <input type="number" name="price" 
                                    value="{{ $product->price }}" 
-                                   class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Stock</label>
-                            <input type="number"
-                                    name="stock"
-                                    class="form-control"
-                                    value="{{ $product->stock }}">
+                                   class="form-control"
+                                   placeholder="Masukkan ruang kelas....">
                         </div>
 
                         <div class="mb-3">
@@ -71,22 +60,8 @@
                             <textarea name="description" class="form-control">{{ $product->description }}</textarea>
                         </div>
 
-                        <div class="mb-3">
-                            <label>Gambar</label>
-
-                            @if($product->image)
-                                <div class="mb-2">
-                                    <img src="{{ asset('storage/'.$product->image) }}" 
-                                        width="120" 
-                                        class="rounded shadow">
-                                </div>
-                            @endif
-
-                            <input type="file" name="image" class="form-control">
-                        </div>
-
                         <button class="btn btn-primary w-100">
-                            Update Produk
+                            Update Data Kelas
                         </button>
                         
 
