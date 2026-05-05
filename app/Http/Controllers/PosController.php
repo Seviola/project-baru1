@@ -105,7 +105,12 @@ class PosController extends Controller
                 TransactionItem::create([
                     'transaction_id' => $transaction->id,
                     'product_id' => $item['id'],
+<<<<<<< Updated upstream
                     'product_name' => $item['name'].' -'.$item['class_type'],
+=======
+                    'product_name' => $item['name'],
+                    'class_type' => $item['class_type'],
+>>>>>>> Stashed changes
                     'price' => $item['price'],
                     'qty' => $item['qty'],
                     'subtotal' => $item['price'] * $item['qty']
