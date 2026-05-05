@@ -128,7 +128,8 @@ window.onafterprint = function(){
 <p style="text-align:left;">
     Untuk Pembayaran :
     @foreach($transaction->items as $item)
-        {{ $item->product_name }} ({{ $item->class_type }}) x{{ $item->qty }}@if(!$loop->last), @endif
+        {{ $item->product_name }}<br>
+        Jenis Kelas : {{ $item->class_type }}<br><br>
     @endforeach
 </p>
 

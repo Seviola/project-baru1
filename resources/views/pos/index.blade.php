@@ -268,11 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             
                             <div>
                                 <strong>${item.name}</strong><br>
-<<<<<<< Updated upstream
-                                <small>${item.class_type}</small><br>
-=======
-                                <small>Kelas : ${item.class_type}</small><br>
->>>>>>> Stashed changes
+                                <small>${item.class_type}</small>
                                 <small>Rp ${item.price.toLocaleString('id-ID')}</small>
                             </div>
 
