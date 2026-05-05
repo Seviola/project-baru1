@@ -13,7 +13,7 @@
   <meta name="author" content="CodedThemes">
 
   <!-- [Favicon] icon -->
-  <link rel="icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon"> <!-- [Google Font] Family -->
+  <link rel="icon" href="{{ asset('assets/images/Scomptec.png') }}" type="image/x-icon"> <!-- [Google Font] Family -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
   <!-- [Tabler Icons] https://tablericons.com -->
   <link rel="stylesheet" href="{{ asset('assets/css/tabler-icons.min.css') }}">
@@ -45,7 +45,7 @@
       <div class="m-header">
         <a href="home" class="b-brand text-primary">
           <!-- ========   Change your logo from here   ============ -->
-          <img src="{{ asset('assets/images/logo-dark.svg') }}" style="width:150px;">
+          <img src="{{ asset('assets/images/Scomptec.png') }}" style="width:150px;">
         </a>
       </div>
       <div class="navbar-content">
@@ -70,14 +70,14 @@
             @endif
             @endauth
 
-            {{-- Products - admin & kasir --}}
+            {{-- Data Kelas - admin & kasir --}}
             @auth
             @if(Auth::user()->hasRole('admin', 'kasir'))
             <li class="pc-item">
                 <a href="{{ route('products.index') }}"
                   class="pc-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
-                    <span class="pc-micon"><i class="ti ti-box"></i></span>
-                    <span class="pc-mtext">Products</span>
+                    <span class="pc-micon"><i class="ti ti-book"></i></span>
+                    <span class="pc-mtext">Program Khusus</span>
                 </a>
             </li>
             @endif
@@ -355,15 +355,10 @@
     <div class="footer-wrapper container-fluid">
       <div class="row">
         <div class="col-sm my-1">
-          <p class="m-0">Seviola &#9829; dan &#931; Kifli &#9827;, <a href="https://themeforest.net/user/codedthemes" target="_blank">PENS</a></p>
+          <p class="m-0">PT Scomptec Edukom Persada</p>
         </div>
         <div class="col-sm my-1">
-          <p class="m-0">Belajar Laravel <a href="https://themewagon.com" target="_blank">Project Kasir</a></p>
-        </div>
-        <div class="col-auto my-1">
-          <ul class="list-inline footer-link mb-0">
-            <li class="list-inline-item"><a href="{{ url('/home') }}">Home</a></li>
-          </ul>
+          <p class="m-0">PT Scomptec Edukom Persada</p>
         </div>
       </div>
     </div>
