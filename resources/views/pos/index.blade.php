@@ -149,6 +149,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const products = @json($products);
+    console.log(products);
     let filteredProducts = [...products];
 
     const productList = document.getElementById('product-list');
@@ -193,6 +194,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             </p>
 
                             <p class="mb-1">
+                                <strong>Jenis Kelas:</strong> ${p.class_type}
+                            </p>
+
+                            <p class="mb-1">
                                 <strong>Ruang Kelas:</strong> ${p.price}
                             </p>
 
@@ -222,6 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
             cart.push({
                 id: product.id,
                 name: product.name,
+                class_type: product.class_type,
                 price: parseInt(product.purchase_price),
                 qty: 1
             });
@@ -262,6 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             
                             <div>
                                 <strong>${item.name}</strong><br>
+                                <small>${item.class_type}</small><br>
                                 <small>Rp ${item.price.toLocaleString('id-ID')}</small>
                             </div>
 
@@ -353,6 +360,7 @@ document.addEventListener("DOMContentLoaded", function () {
             items.push({
                 id: item.id,
                 name: item.name,
+                class_type: item.class_type,
                 price: parseInt(item.price),
                 qty: parseInt(item.qty)
             });

@@ -105,7 +105,7 @@ class PosController extends Controller
                 TransactionItem::create([
                     'transaction_id' => $transaction->id,
                     'product_id' => $item['id'],
-                    'product_name' => $item['name'],
+                    'product_name' => $item['name'].' -'.$item['class_type'],
                     'price' => $item['price'],
                     'qty' => $item['qty'],
                     'subtotal' => $item['price'] * $item['qty']
