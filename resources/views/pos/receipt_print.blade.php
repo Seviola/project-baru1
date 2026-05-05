@@ -1,108 +1,162 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kwitansi</title>
+    <title>KWITANSI</title>
 
     <style>
-        body {
-            margin: 0;
-            font-family: "Times New Roman", serif;
+        body{
+            font-family: monospace;
+            width:300px;
+            margin:auto;
+            font-size:12px;
+            color:#000;
         }
 
-        .paper {
-            width: 1000px;
-            height: 450px;
-            margin: auto;
-            position: relative;
+        h3,p{
+            text-align:center;
+            margin:2px 0;
         }
 
-        /* BACKGROUND IMAGE */
-        .bg {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
+        table{
+            width:100%;
+            border-collapse: collapse;
         }
 
-        /* TEXT OVERLAY */
-        .text {
-            position: absolute;
-            z-index: 2;
-            font-size: 16px;
-            color: #000;
+        td{
+            padding:2px 0;
+            vertical-align: top;
         }
 
-        .bold {
-            font-weight: bold;
+        .right{
+            text-align:right;
         }
 
-        /* POSISI TEXT (atur sesuai gambar kamu) */
-        .no        { top: 85px; left: 300px; }
-        .nama      { top: 130px; left: 300px; }
-        .uang      { top: 175px; left: 300px; width: 600px; }
-        .untuk     { top: 235px; left: 300px; width: 600px; }
-        .jumlah    { top: 310px; left: 300px; font-size: 20px; font-weight: bold; }
-        .metode    { top: 350px; left: 300px; }
+        .center{
+            text-align:center;
+        }
 
-        .tanggal   { top: 300px; right: 80px; }
+        hr{
+            border:none;
+            border-top:1px dashed #000;
+            margin:6px 0;
+        }
 
-        @media print {
-            button { display: none; }
+        .thanks{
+            margin-top:10px;
+            text-align:center;
+            font-size:11px;
+        }
+
+        button{
+            margin-top:10px;
+            width:100%;
+            padding:6px;
+            cursor:pointer;
+        }
+
+        .social-table{
+            width:100%;
+            margin-top:5px;
+            border-collapse: collapse;
+        }
+
+        .social-table td{
+            width:50%;
+            text-align:center;
+            padding:2px 0;
+            font-size:12px;
+        }
+
+        .social-table i{
+            margin-right:4px;
+        }
+
+        @media print{
+            button{
+                display:none;
+            }
         }
     </style>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <body onload="window.print()">
 
 <script>
 window.onafterprint = function(){
-    window.location.href="/kasir";
+    window.location.href = "/kasir";
 }
 </script>
 
-<div class="paper">
+<h3>PT SCOMPTEC EDUKOM PERSADA</h3>
+<p>
+    <i class="fa-solid fa-location-dot"></i>
+    Head Office: Jl. Kayon 24 Surabaya 60271 - Indonesia
+</p>
 
-    <!-- BACKGROUND -->
-    <img src="{{ asset('assets/images/Scomptec.png') }}" class="bg">
+<table class="social-table">
+    <tr>
+        <td>
+            <i class="fa-solid fa-phone"></i> (031) 5315678
+        </td>
+        <td>
+            <i class="fa-brands fa-instagram"></i> @Scomptec_learning
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <i class="fa-brands fa-facebook"></i> scomptec-learning
+        </td>
+        <td>
+            <i class="fa-brands fa-tiktok"></i> scomptec.official
+        </td>
+    </tr>
+</table>
 
-    <!-- DATA -->
-    <div class="text no">
-        {{ $transaction->invoice }}
-    </div>
+<hr>
 
-    <div class="text nama">
-        {{ $transaction->student_name }}
-    </div>
+<p><b>NO :</b> {{ $transaction->invoice }}</p>
+<p><b>Tanggal :</b> {{ now()->format('d-m-Y H:i:s') }}</p>
 
-    <div class="text uang">
-        {{ number_format($transaction->total,0,',','.') }} Rupiah
-    </div>
+<hr>
 
-    <div class="text untuk">
-        @foreach($transaction->items as $item)
-            {{ $item->product_name }} x{{ $item->qty }}@if(!$loop->last), @endif
-        @endforeach
-    </div>
+<p style="text-align:left;">Telah Terima Dari : {{ $transaction->student_name }}</p>
+<p style="text-align:left;">
+    Uang Sebanyak : Rp {{ number_format($transaction->total,0,',','.') }}
+</p>
 
-    <div class="text jumlah">
-        Rp {{ number_format($transaction->total,0,',','.') }}
-    </div>
+<p style="text-align:left;">
+    Untuk Pembayaran :
+    @foreach($transaction->items as $item)
+        {{ $item->product_name }}@if(!$loop->last), @endif
+    @endforeach
+</p>
 
-    <div class="text metode">
-        {{ $transaction->payment_method }}
-    </div>
+<p style="text-align:left;">
+    Jumlah : Rp {{ number_format($transaction->total,0,',','.') }}
+</p>
 
-    <div class="text tanggal">
-        {{ date('d F Y', strtotime($transaction->created_at)) }}
-    </div>
+<hr>
 
+<table style="margin-top:20px;">
+    <tr>
+        <td style="width:50%; text-align:left;">
+            Metode Pembayaran:<br>
+            {{ $transaction->payment_method }}
+        </td>
+
+        <td style="width:50%; text-align:center;">
+            Surabaya, {{ date('d-m-Y', strtotime($transaction->created_at)) }}<br><br><br><br>
+            (_________________)
+        </td>
+    </tr>
+</table>
+
+<div class="thanks">
+    Simpan kwitansi ini sebagai bukti pembayaran
 </div>
 
-<center>
-    <button onclick="window.print()">Print Ulang</button>
-</center>
+<button onclick="window.print()">Print Ulang</button>
 
 </body>
 </html>

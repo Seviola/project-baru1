@@ -53,8 +53,8 @@
             {{-- Dashboard - semua role --}}
             <li class="pc-item">
                 <a href="{{ url('/home') }}" class="pc-link">
-                    <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
-                    <span class="pc-mtext">Dashboard</span>
+                    <span class="pc-micon"><i class="ti ti-building-bank"></i></span>
+                    <span class="pc-mtext">Home</span>
                 </a>
             </li>
 
@@ -63,7 +63,7 @@
             @if(Auth::user()->hasRole('admin', 'kasir', 'user'))
             <li class="pc-item">
                 <a href="{{ url('/kasir') }}" class="pc-link {{ request()->is('kasir*') ? 'active' : '' }}">
-                    <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
+                    <span class="pc-micon"><i class="ti ti-calculator"></i></span>
                     <span class="pc-mtext">Kasir</span>
                 </a>
             </li>
