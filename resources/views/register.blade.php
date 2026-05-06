@@ -1,171 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- [Head] start -->
-
 <head>
-  <title>Sign up</title>
-  <!-- [Meta] -->
+  <title>Sign Up — Scomptec</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
-  <meta name="keywords" content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
-  <meta name="author" content="CodedThemes">
 
-  <!-- [Favicon] icon -->
-  <link rel="icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon"> <!-- [Google Font] Family -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
-  <!-- [Tabler Icons] https://tablericons.com -->
+  <link rel="icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+
   <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}">
-  <!-- [Feather Icons] https://feathericons.com -->
   <link rel="stylesheet" href="{{ asset('assets/fonts/feather.css') }}">
-  <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
   <link rel="stylesheet" href="{{ asset('assets/fonts/fontawesome.css') }}">
-  <!-- [Material Icons] https://fonts.google.com/icons -->
   <link rel="stylesheet" href="{{ asset('assets/fonts/material.css') }}">
-  <!-- [Template CSS Files] -->
   <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
   <link rel="stylesheet" href="{{ asset('assets/css/style-preset.css') }}">
+
+  <style>
+    :root {
+      --blue-dark:  #1a237e;
+      --blue-mid:   #283593;
+      --blue-light: #3949ab;
+      --red:        #e53935;
+      --red-dark:   #c62828;
+      --cream:      #f5f6fa;
+      --muted:      #8c9ec0;
+      --border:     #dde3f0;
+      --text-mid:   #5c6b8a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--blue-dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+    }
+
+    /* LEFT */
+    .auth-left {
+      flex: 0 0 42%;
+      position: relative;
+      display: flex; flex-direction: column; justify-content: flex-start; gap: 36px;
+      padding: 40px 52px;
+      background: linear-gradient(155deg, var(--blue-dark) 0%, var(--blue-mid) 60%, #1565c0 100%);
+      overflow: hidden;
+    }
+
+    .auth-left::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; background: linear-gradient(90deg, var(--red), #ef5350);
+    }
+
+    .deco-circle-1 { position: absolute; width: 340px; height: 340px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.06); top: -80px; right: -80px; }
+    .deco-circle-2 { position: absolute; width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.06); top: -10px; right: -10px; }
+    .deco-circle-3 { position: absolute; width: 260px; height: 260px; border-radius: 50%; background: rgba(229,57,53,0.07); bottom: -50px; left: -70px; }
+
+    .grid-overlay {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px), linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    .brand { position: relative; z-index: 2; }
+
+    .brand-logo { height: 140px; object-fit: contain; filter: brightness(0) invert(1); margin-top: -10px; }
+
+    .brand-tagline { display: none; }
+
+    .left-content { position: relative; z-index: 2; }
+
+    .left-tagline { font-size: 1.9rem; font-weight: 800; line-height: 1.22; color: #fff; margin-bottom: 10px; }
+    .left-tagline .accent { color: var(--red); display: block; }
+    .left-sub {
+      font-size: 0.86rem; color: rgba(255,255,255,0.55); line-height: 1.7;
+      max-width: 320px; border-left: 3px solid var(--red); padding-left: 12px;
+    }
+
+    .steps { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 2; }
+
+    .step { display: flex; align-items: flex-start; gap: 14px; }
+
+    .step-num {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(229,57,53,0.12); border: 1px solid rgba(229,57,53,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: var(--red);
+    }
+
+    .step-title { font-size: 0.86rem; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 2px; }
+    .step-desc  { font-size: 0.76rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+
+    /* RIGHT */
+    .auth-right {
+      flex: 1;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 48px 60px;
+      background: var(--cream);
+      overflow-y: auto;
+      animation: fadeSlide 0.5s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .form-box { width: 100%; max-width: 460px; padding-top: 8px; }
+
+    .form-top-bar {
+      height: 4px; background: linear-gradient(90deg, var(--red), #ef5350);
+      border-radius: 4px 4px 0 0;
+    }
+
+    .form-card {
+      background: #fff; border-radius: 0 0 16px 16px;
+      padding: 30px 36px 36px;
+      box-shadow: 0 4px 32px rgba(26,35,126,0.08);
+      border: 1px solid var(--border); border-top: none;
+      margin-bottom: 18px;
+    }
+
+    .form-header { margin-bottom: 24px; }
+    .form-header h2 { font-size: 1.55rem; font-weight: 800; color: var(--blue-dark); margin-bottom: 6px; }
+    .form-header p { font-size: 0.87rem; color: var(--text-mid); }
+    .form-header p a { color: var(--red); font-weight: 600; text-decoration: none; }
+    .form-header p a:hover { color: var(--red-dark); }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+
+    .field-group { margin-bottom: 16px; }
+
+    .field-group label {
+      display: block; font-size: 0.74rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--blue-dark); margin-bottom: 7px;
+    }
+
+    .field-group label .req { color: var(--red); margin-left: 2px; }
+
+    .input-wrap { position: relative; }
+
+    .input-wrap .input-icon {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 14px; pointer-events: none;
+    }
+
+    .field-group input {
+      width: 100%; padding: 11px 14px 11px 40px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem; color: var(--blue-dark);
+      background: var(--cream); border: 1.5px solid var(--border);
+      border-radius: 10px; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .field-group input::placeholder { color: #b0bcc8; }
+
+    .field-group input:focus {
+      background: #fff; border-color: var(--blue-light);
+      box-shadow: 0 0 0 3px rgba(57,73,171,0.12);
+    }
+
+    .field-group input.is-invalid { border-color: #f87171; }
+
+    .invalid-feedback { font-size: 0.78rem; color: #c53030; margin-top: 5px; }
+
+    /* Role selector */
+    .role-section { margin-bottom: 16px; }
+
+    .role-section .role-label {
+      font-size: 0.74rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--blue-dark); margin-bottom: 10px; display: block;
+    }
+
+    .role-label .req { color: var(--red); margin-left: 2px; }
+
+    .role-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+
+    .role-option { position: relative; }
+
+    .role-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+
+    .role-option label {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 10px 8px; background: var(--cream);
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 0.8rem; font-weight: 600; color: var(--text-mid);
+      cursor: pointer; transition: all 0.2s; text-align: center;
+      gap: 4px;
+    }
+
+    .role-option label .role-icon { font-size: 18px; }
+
+    .role-option input[type="radio"]:checked + label {
+      background: var(--blue-dark); border-color: var(--blue-dark);
+      color: #fff; box-shadow: 0 4px 14px rgba(26,35,126,0.25);
+    }
+
+    .role-option label:hover { border-color: var(--blue-light); color: var(--blue-dark); background: #fff; }
+
+    /* Terms */
+    .terms-text { font-size: 0.8rem; color: #7a8a99; line-height: 1.65; margin-bottom: 18px; }
+    .terms-text a { color: var(--red); text-decoration: none; font-weight: 500; }
+    .terms-text a:hover { color: var(--red-dark); }
+
+    .btn-submit {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-light) 100%);
+      color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92rem; font-weight: 700; letter-spacing: 0.03em;
+      border: none; border-radius: 10px; cursor: pointer;
+      transition: all 0.25s; position: relative; overflow: hidden;
+    }
+
+    .btn-submit::after {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-submit:hover::after { left: 100%; }
+    .btn-submit:hover { box-shadow: 0 6px 20px rgba(26,35,126,0.3); transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .divider span { font-size: 0.74rem; color: #9aabb8; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+
+    .social-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+
+    .btn-social {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 8px; background: var(--cream); border: 1.5px solid var(--border);
+      border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.8rem; font-weight: 500; color: #4a5568; cursor: pointer; transition: all 0.2s;
+    }
+
+    .btn-social img { width: 16px; height: 16px; object-fit: contain; }
+    .btn-social:hover { background: #fff; border-color: var(--blue-light); box-shadow: 0 2px 10px rgba(26,35,126,0.1); }
+
+    .alert-error {
+      background: #fff5f5; border: 1px solid #feb2b2; border-left: 3px solid var(--red);
+      border-radius: 10px; padding: 12px 14px; margin-bottom: 18px;
+      font-size: 0.85rem; color: #c53030;
+    }
+    .alert-error ul { list-style: none; }
+    .alert-error ul li::before { content: '• '; }
+
+    .form-footer { display: flex; justify-content: space-between; align-items: center; }
+    .form-footer p { font-size: 0.74rem; color: #9aabb8; }
+    .form-footer a { font-size: 0.74rem; color: #9aabb8; text-decoration: none; }
+    .form-footer a:hover { color: var(--blue-mid); }
+
+    .loader-bg { display: none; }
+
+    @media (max-width: 900px) {
+      .auth-left { display: none; }
+      .auth-right { padding: 32px 20px; }
+      .field-row { grid-template-columns: 1fr; }
+      .role-grid { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
 </head>
-<!-- [Head] end -->
-<!-- [Body] Start -->
 
 <body>
-  <!-- [ Pre-loader ] start -->
   <div class="loader-bg">
-    <div class="loader-track">
-      <div class="loader-fill"></div>
-    </div>
+    <div class="loader-track"><div class="loader-fill"></div></div>
   </div>
-  <!-- [ Pre-loader ] End -->
 
-  <div class="auth-main">
-    <div class="auth-wrapper v3">
-      <div class="auth-form">
-        <div class="auth-header">
-          <a href="#"><img src="{{ asset('assets/images/logo-dark.svg') }}" alt="img"></a>
-        </div>
-        <div class="card my-5">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-end mb-4">
-              <h3 class="mb-0"><b>Sign up</b></h3>
-              <a href="{{ url('/home/login') }}" class="link-primary">Already have an account?</a>
-            </div>
-            <form method="POST" action="{{ url('/register') }}">
-            @csrf
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group mb-3">
-                  <label class="form-label">First Name*</label>
-                  <input type="text" name="first_name" class="form-control" placeholder="First Name">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group mb-3">
-                  <label class="form-label">Last Name</label>
-                  <input type="text" name="last_name" class="form-control" placeholder="Last Name">
-                </div>
-              </div>
-            </div>
-            <div class="form-group mb-3">
-              <label class="form-label">Email Address*</label>
-              <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                     placeholder="Email Address" value="{{ old('email') }}">
-              @error('email')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-            <div class="form-group mb-3">
-              <label class="form-label">Password*</label>
-              <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                     placeholder="Password">
-              @error('password')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-            <div class="form-group mb-3">
-              <label class="form-label">Konfirmasi Password*</label>
-              <input type="password" name="password_confirmation" class="form-control"
-                     placeholder="Ulangi Password">
-            </div>
-            <div class="form-group mb-3">
-              <label class="form-label">Role*</label>
-              <select name="role" class="form-select @error('role') is-invalid @enderror" required>
-                <option value="">-- Pilih Role --</option>
-                <option value="admin"  {{ old('role') == 'admin'  ? 'selected' : '' }}>Admin</option>
-                <option value="kasir"  {{ old('role') == 'kasir'  ? 'selected' : '' }}>Kasir</option>
-                <option value="vendor" {{ old('role') == 'vendor' ? 'selected' : '' }}>Vendor</option>
-                <option value="user"   {{ old('role') == 'user'   ? 'selected' : '' }}>User</option>
-              </select>
-              @error('role')
-                <div class="invalid-feedback">{{ $message }}</div>
-              @enderror
-            </div>
-            @if($errors->any())
-            <div class="alert alert-danger py-2">
-                <ul class="mb-0 ps-3">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-            <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
-            <div class="d-grid mt-3">
-              <button type="submit" class="btn btn-primary">Create Account</button>
-            </div>
-            </form>
-            <div class="saprator mt-3">
-              <span>Sign up with</span>
-            </div>
-            <div class="row">
-              <div class="col-4">
-                <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="{{ asset('assets/images/authentication/google.svg') }}" alt="img"> <span class="d-none d-sm-inline-block"> Google</span>
-                  </button>
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="{{ asset('assets/images/authentication/twitter.svg') }}" alt="img"> <span class="d-none d-sm-inline-block"> Twitter</span>
-                  </button>
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="{{ asset('assets/images/authentication/facebook.svg') }}" alt="img"> <span class="d-none d-sm-inline-block"> Facebook</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+  <div class="auth-left">
+    <div class="grid-overlay"></div>
+    <div class="deco-circle-1"></div>
+    <div class="deco-circle-2"></div>
+    <div class="deco-circle-3"></div>
 
-          </div>
+    <div class="brand">
+      <img src="{{ asset('assets/images/Scomptec.png') }}" alt="Scomptec" class="brand-logo">
+    </div>
+
+    <div class="left-content">
+      <div class="left-tagline">
+        Bergabung &amp; kelola<br>bisnis dengan <span class="accent">lebih mudah.</span>
+      </div>
+      <p class="left-sub">
+        Buat akun Scomptec kamu dan mulai berkontribusi bersama tim dengan lebih efisien.
+      </p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Isi data diri</div>
+          <div class="step-desc">Lengkapi form dan pilih role kamu.</div>
         </div>
-        <div class="auth-footer row">
-          <!-- <div class=""> -->
-          <div class="col my-1">
-            <p class="m-0">Copyright © <a href="#">Codedthemes</a></p>
-          </div>
-          <div class="col my-1">
-            <p class="m-0">Distributed by <a href="https://themewagon.com">ThemeWagon</a></p>
-          </div>
-          <div class="col-auto my-1">
-            <ul class="list-inline footer-link mb-0">
-              <li class="list-inline-item"><a href="#">Home</a></li>
-              <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-              <li class="list-inline-item"><a href="#">Contact us</a></li>
-            </ul>
-          </div>
-          <!-- </div> -->
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Verifikasi admin</div>
+          <div class="step-desc">Admin akan mengaktifkan akses akunmu.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Mulai bekerja</div>
+          <div class="step-desc">Akses dashboard dan kelola tugasmu.</div>
         </div>
       </div>
     </div>
   </div>
-  <!-- [ Main Content ] end -->
-  <!-- Required Js -->
+
+  <div class="auth-right">
+    <div class="form-box">
+      <div class="form-top-bar"></div>
+      <div class="form-card">
+
+        <div class="form-header">
+          <h2>Create account ✨</h2>
+          <p>Already have an account? <a href="{{ url('/home/login') }}">Sign in here</a></p>
+        </div>
+
+        @if($errors->any())
+          <div class="alert-error">
+            <ul>
+              @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+
+        <form method="POST" action="{{ url('/register') }}">
+          @csrf
+
+          <div class="field-row">
+            <div class="field-group" style="margin-bottom:0">
+              <label>First Name <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon"><i class="feather icon-user"></i></span>
+                <input type="text" name="first_name" placeholder="John" value="{{ old('first_name') }}">
+              </div>
+            </div>
+            <div class="field-group" style="margin-bottom:0">
+              <label>Last Name</label>
+              <div class="input-wrap">
+                <span class="input-icon"><i class="feather icon-user"></i></span>
+                <input type="text" name="last_name" placeholder="Doe" value="{{ old('last_name') }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Email Address <span class="req">*</span></label>
+            <div class="input-wrap">
+              <span class="input-icon"><i class="feather icon-mail"></i></span>
+              <input type="email" name="email"
+                     class="@error('email') is-invalid @enderror"
+                     placeholder="you@scomptec.com"
+                     value="{{ old('email') }}" required>
+            </div>
+            @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+          </div>
+
+          <div class="field-row">
+            <div class="field-group" style="margin-bottom:0">
+              <label>Password <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon"><i class="feather icon-lock"></i></span>
+                <input type="password" name="password"
+                       class="@error('password') is-invalid @enderror"
+                       placeholder="Min. 8 characters">
+              </div>
+              @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+            <div class="field-group" style="margin-bottom:0">
+              <label>Confirm Password <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon"><i class="feather icon-lock"></i></span>
+                <input type="password" name="password_confirmation" placeholder="Repeat password">
+              </div>
+            </div>
+          </div>
+
+          <div class="role-section">
+            <span class="role-label">Select Role <span class="req">*</span></span>
+            <div class="role-grid">
+              <div class="role-option">
+                <input type="radio" name="role" id="role_admin" value="admin" {{ old('role')=='admin' ? 'checked' : '' }} required>
+                <label for="role_admin"><span class="role-icon">🛡️</span> Admin</label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="role_kasir" value="kasir" {{ old('role')=='kasir' ? 'checked' : '' }}>
+                <label for="role_kasir"><span class="role-icon">💳</span> Kasir</label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="role_vendor" value="vendor" {{ old('role')=='vendor' ? 'checked' : '' }}>
+                <label for="role_vendor"><span class="role-icon">🏢</span> Vendor</label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="role_user" value="user" {{ old('role')=='user' ? 'checked' : '' }}>
+                <label for="role_user"><span class="role-icon">👤</span> User</label>
+              </div>
+            </div>
+            @error('role')<div class="invalid-feedback">{{ $message }}</div>@enderror
+          </div>
+
+          <p class="terms-text">
+            By creating an account, you agree to Scomptec's
+            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          </p>
+
+          <button type="submit" class="btn-submit">Create My Account</button>
+        </form>
+
+        <div class="divider"><span>or sign up with</span></div>
+
+        <div class="social-row">
+          <button type="button" class="btn-social">
+            <img src="{{ asset('assets/images/authentication/google.svg') }}" alt="Google"> Google
+          </button>
+          <button type="button" class="btn-social">
+            <img src="{{ asset('assets/images/authentication/twitter.svg') }}" alt="Twitter"> Twitter
+          </button>
+          <button type="button" class="btn-social">
+            <img src="{{ asset('assets/images/authentication/facebook.svg') }}" alt="Facebook"> Facebook
+          </button>
+        </div>
+
+      </div>
+
+      <div class="form-footer">
+        <p>© {{ date('Y') }} Scomptec. All rights reserved.</p>
+        <div style="display:flex;gap:14px;">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <script src="{{ asset('assets/js/plugins/popper.min.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/simplebar.min.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
@@ -173,192 +456,10 @@
   <script src="{{ asset('assets/js/pcoded.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/feather.min.js') }}"></script>
 
-
-
-
-
-  <script>
-    layout_change('light');
-  </script>
-
-
-
-
-  <script>
-    change_box_container('false');
-  </script>
-
-
-
-  <script>
-    layout_rtl_change('false');
-  </script>
-
-
-  <script>
-    preset_change("preset-1");
-  </script>
-
-
-  <script>
-    font_change("Public-Sans");
-  </script>
-
-
-  <div class="offcanvas pct-offcanvas offcanvas-end" tabindex="-1" id="offcanvas_pc_layout">
-    <div class="offcanvas-header bg-primary">
-      <h5 class="offcanvas-title text-white">Mantis Customizer</h5>
-      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="pct-body" style="height: calc(100% - 60px)">
-      <div class="offcanvas-body">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse1">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <div class="avtar avtar-xs bg-light-primary">
-                    <i class="ti ti-layout-sidebar f-18"></i>
-                  </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-1">Theme Layout</h6>
-                  <span>Choose your layout</span>
-                </div>
-                <i class="ti ti-chevron-down"></i>
-              </div>
-            </a>
-            <div class="collapse show" id="pctcustcollapse1">
-              <div class="pct-content">
-                <div class="pc-rtl">
-                  <p class="mb-1">Direction</p>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="layoutmodertl">
-                    <label class="form-check-label" for="layoutmodertl">RTL</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse2">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <div class="avtar avtar-xs bg-light-primary">
-                    <i class="ti ti-brush f-18"></i>
-                  </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-1">Theme Mode</h6>
-                  <span>Choose light or dark mode</span>
-                </div>
-                <i class="ti ti-chevron-down"></i>
-              </div>
-            </a>
-            <div class="collapse show" id="pctcustcollapse2">
-              <div class="pct-content">
-                <div class="theme-color themepreset-color theme-layout">
-                  <a href="#!" class="active" onclick="layout_change('light')" data-value="false"><span><img src="{{ asset('assets/images/customization/default.svg') }}" alt="img"></span><span>Light</span></a>
-                  <a href="#!" class="" onclick="layout_change('dark')" data-value="true"><span><img src="{{ asset('assets/images/customization/dark.svg') }}" alt="img"></span><span>Dark</span></a>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse3">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <div class="avtar avtar-xs bg-light-primary">
-                    <i class="ti ti-color-swatch f-18"></i>
-                  </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-1">Color Scheme</h6>
-                  <span>Choose your primary theme color</span>
-                </div>
-                <i class="ti ti-chevron-down"></i>
-              </div>
-            </a>
-            <div class="collapse show" id="pctcustcollapse3">
-              <div class="pct-content">
-                <div class="theme-color preset-color">
-                  <a href="#!" class="active" data-value="preset-1"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 1</span></a>
-                  <a href="#!" class="" data-value="preset-2"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 2</span></a>
-                  <a href="#!" class="" data-value="preset-3"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 3</span></a>
-                  <a href="#!" class="" data-value="preset-4"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 4</span></a>
-                  <a href="#!" class="" data-value="preset-5"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 5</span></a>
-                  <a href="#!" class="" data-value="preset-6"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 6</span></a>
-                  <a href="#!" class="" data-value="preset-7"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 7</span></a>
-                  <a href="#!" class="" data-value="preset-8"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 8</span></a>
-                  <a href="#!" class="" data-value="preset-9"><span><img src="{{ asset('assets/images/customization/theme-color.svg') }}" alt="img"></span><span>Theme 9</span></a>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item pc-boxcontainer">
-            <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse4">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <div class="avtar avtar-xs bg-light-primary">
-                    <i class="ti ti-border-inner f-18"></i>
-                  </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-1">Layout Width</h6>
-                  <span>Choose fluid or container layout</span>
-                </div>
-                <i class="ti ti-chevron-down"></i>
-              </div>
-            </a>
-            <div class="collapse show" id="pctcustcollapse4">
-              <div class="pct-content">
-                <div class="theme-color themepreset-color boxwidthpreset theme-container">
-                  <a href="#!" class="active" onclick="change_box_container('false')" data-value="false"><span><img src="{{ asset('assets/images/customization/default.svg') }}" alt="img"></span><span>Fluid</span></a>
-                  <a href="#!" class="" onclick="change_box_container('true')" data-value="true"><span><img src="{{ asset('assets/images/customization/container.svg') }}" alt="img"></span><span>Container</span></a>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <a class="btn border-0 text-start w-100" data-bs-toggle="collapse" href="#pctcustcollapse5">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <div class="avtar avtar-xs bg-light-primary">
-                    <i class="ti ti-typography f-18"></i>
-                  </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-1">Font Family</h6>
-                  <span>Choose your font family.</span>
-                </div>
-                <i class="ti ti-chevron-down"></i>
-              </div>
-            </a>
-            <div class="collapse show" id="pctcustcollapse5">
-              <div class="pct-content">
-                <div class="theme-color fontpreset-color">
-                  <a href="#!" class="active" onclick="font_change('Public-Sans')" data-value="Public-Sans"><span>Aa</span><span>Public Sans</span></a>
-                  <a href="#!" class="" onclick="font_change('Roboto')" data-value="Roboto"><span>Aa</span><span>Roboto</span></a>
-                  <a href="#!" class="" onclick="font_change('Poppins')" data-value="Poppins"><span>Aa</span><span>Poppins</span></a>
-                  <a href="#!" class="" onclick="font_change('Inter')" data-value="Inter"><span>Aa</span><span>Inter</span></a>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <div class="collapse show">
-              <div class="pct-content">
-                <div class="d-grid">
-                  <button class="btn btn-light-danger" id="layoutreset">Reset Layout</button>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <script>layout_change('light');</script>
+  <script>change_box_container('false');</script>
+  <script>layout_rtl_change('false');</script>
+  <script>preset_change("preset-1");</script>
+  <script>font_change("Public-Sans");</script>
 </body>
-<!-- [Body] end -->
-
 </html>
