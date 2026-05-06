@@ -6,10 +6,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\PosController;
-use App\Http\Controllers\RestockController;
-use App\Http\Controllers\VendorController;
 use App\Http\Controllers\ReportController;
-use App\Models\Product;
 
 // PUBLIC ROUTES
 Route::match(['get', 'post'], '/login', [PageController::class, 'login'])->name('login');
@@ -35,8 +32,7 @@ Route::middleware('auth')->group(function () {
     // ================= ADMIN =================
     Route::middleware('role:admin')->group(function () {
 
-        // Vendor & Class
-        Route::resource('vendor', VendorController::class)->except(['show']);
+        // Produk / Kelas
         Route::resource('products', ProductController::class);
 
         // Kasir
@@ -45,34 +41,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/kasir/receipt/{id}', [PosController::class, 'receipt']);
         Route::get('/kasir/setor', [PosController::class, 'setor']);
 
-        // ===== RESTOCK =====
-        Route::get('/restock/history', [RestockController::class, 'history'])->name('restock.history');
-
-        // Single
-        Route::patch('/restock/{vendorProduct}/approve', [RestockController::class, 'approve'])->name('restock.approve');
-        Route::patch('/restock/{vendorProduct}/reject', [RestockController::class, 'reject'])->name('restock.reject');
-        Route::patch('/restock/{vendorProduct}/paid', [RestockController::class, 'markPaid'])->name('restock.markPaid');
-
-        // ===== BATCH ACTION =====
-        Route::patch('/restock/batch/{batchId}/approve', [RestockController::class, 'approveBatch'])->name('restock.approveBatch');
-        Route::patch('/restock/batch/{batchId}/reject', [RestockController::class, 'rejectBatch'])->name('restock.rejectBatch');
-        Route::patch('/restock/batch/{batchId}/paid', [RestockController::class, 'markPaidBatch'])->name('restock.markPaidBatch');
-
-        // ===== INVOICE =====
-        Route::get('/restock/{vendorProduct}/invoice', [RestockController::class, 'invoice'])->name('restock.invoice');
-        Route::get('/restock/batch/{batchId}/invoice', [RestockController::class, 'invoiceBatch'])->name('restock.invoiceBatch');
-
         // Report
         Route::get('/report', [ReportController::class, 'dailyReport']);
         Route::get('/report/pdf', [ReportController::class, 'downloadPdf']);
         Route::get('/report/setoran', [ReportController::class, 'depositReport'])->name('report.setoran');
-    });
-
-    // ================= VENDOR & ADMIN =================
-    Route::middleware('role:admin,vendor')->group(function () {
-        Route::get('/restock', [RestockController::class, 'index'])->name('restock.index');
-        Route::post('/restock', [RestockController::class, 'store'])->name('restock.store');
-        Route::get('/vendor', [VendorController::class, 'index'])->name('vendor.index');
     });
 
     // ================= KASIR, USER & ADMIN =================
@@ -97,11 +69,3 @@ Route::middleware('auth')->group(function () {
     });
 
 });
-
-// ROUTE KHUSUS VENDOR
-Route::get('/vendor/restock', function () {
-    $products = Product::all();
-    return view('vendor.restock', compact('products'));
-});
-
-Route::post('/vendor/restock', [VendorController::class, 'restock']);

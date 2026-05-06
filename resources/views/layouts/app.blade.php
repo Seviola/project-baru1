@@ -83,31 +83,7 @@
             @endif
             @endauth
 
-            {{-- Vendor Master - admin & vendor --}}
-            @auth
-            @if(Auth::user()->hasRole('admin', 'vendor'))
-            <li class="pc-item">
-                <a href="{{ route('vendor.index') }}"
-                  class="pc-link {{ request()->routeIs('vendor.*') ? 'active' : '' }}">
-                    <span class="pc-micon"><i class="ti ti-building-store"></i></span>
-                    <span class="pc-mtext">Vendor</span>
-                </a>
-            </li>
-            @endif
-            @endauth
 
-            {{-- Restock - admin & vendor --}}
-            @auth
-            @if(Auth::user()->hasRole('admin', 'vendor'))
-            <li class="pc-item">
-                <a href="{{ route('restock.index') }}"
-                  class="pc-link {{ request()->routeIs('restock.*') ? 'active' : '' }}">
-                    <span class="pc-micon"><i class="ti ti-refresh"></i></span>
-                    <span class="pc-mtext">Restock</span>
-                </a>
-            </li>
-            @endif
-            @endauth
         </ul>
         {{-- UI Components - semua role bisa akses --}}
         <li class="pc-item pc-caption">
