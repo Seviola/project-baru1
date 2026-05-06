@@ -120,6 +120,7 @@ window.onafterprint = function(){
 
 <hr>
 
+<p style="text-align:left;">Kasir: {{ $transaction->user->name }}</p>
 <p style="text-align:left;">Telah Terima Dari : {{ $transaction->student_name }}</p>
 <p style="text-align:left;">
     Uang Sebanyak : Rp {{ number_format($transaction->total,0,',','.') }}
