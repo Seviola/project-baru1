@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/kasir/checkout', [PosController::class, 'checkout']);
         Route::get('/kasir/receipt/{id}', [PosController::class, 'receipt']);
         Route::get('/kasir/setor', [PosController::class, 'setor']);
+        Route::get('/kasir/receipt-pdf/{id}', [PosController::class, 'receiptPdf']);
 
         // Report
         Route::get('/report', [ReportController::class, 'dailyReport']);
@@ -53,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/kasir', [PosController::class, 'index'])->name('kasir.index');
         Route::post('/kasir/checkout', [PosController::class, 'checkout']);
         Route::get('/kasir/receipt/{id}', [PosController::class, 'receipt']);
+        Route::get('/kasir/receipt-pdf/{id}', [PosController::class, 'receiptPdf']);
         Route::post('/kasir/setor', [PosController::class, 'setor'])->name('kasir.setor');
     });
 
@@ -62,6 +64,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
         Route::get('/report/setoran', [ReportController::class, 'depositReport']);
         Route::get('/classroom', [ClassRoomController::class, 'index'])->name('classroom.index');
+        Route::get('/report/transaksi', [PosController::class, 'dailyReport'])->name('report.transaksi');
     });
 
     // ================= PROFIL =================

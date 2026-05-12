@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PosController extends Controller
 {
@@ -70,6 +71,12 @@ class PosController extends Controller
     public function receipt($id)
     {
         $transaction = Transaction::with('items','user')->findOrFail($id);
+
+        // Selain admin hanya bisa lihat kwitansi miliknya
+        if (auth()->user()->role != 'admin' &&
+            $transaction->user_id != auth()->id()) {
+                abort(403, 'Akses ditolak');
+        }
 
         return view('pos.receipt_print', compact('transaction'));
     }
@@ -157,5 +164,39 @@ class PosController extends Controller
         return response()->json([
             'message' => 'Setoran berhasil yee'
         ]);
+    }
+
+    public function dailyReport()
+    {
+        if (auth()->user()->role == 'admin') {
+            // Admin bisa lihat semua transaksi
+            $transactions = Transaction::with(['items','user'])
+                ->latest()
+                ->get();
+        } else {
+            // Kasir hanya lihat transaksi miliknya
+            $transactions = Transaction::with(['items','user'])
+                ->where('user_id', auth()->id())
+                ->latest()
+                ->get();
+        }
+        
+        return view('reports.daily', compact('transactions'));
+    }
+
+    public function receiptPdf($id)
+    {
+        $transaction = Transaction::with('items','user')->findOrFail($id);
+
+        if (auth()->user()->role != 'admin' && 
+            $transaction->user_id != auth()->id()) {
+                abort(403, 'Akses ditolak');
+        }
+
+        $pdf = Pdf::loadView('pos.receipt_pdf', compact('transaction'))
+                    ->setPaper('a5', 'portrait');
+        $nama = preg_replace('/[^A-Za-z0-9\-]/', '-', $transaction->student_name);
+
+        return $pdf->download('Kwitansi-'.$nama.'.pdf');
     }
 }

@@ -1,46 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Laporan Harian</title>
-    <th>Kasir</th>
-    <td>{{ $transactions->user->name }}</td>
-    <style>
-        body { font-family: sans-serif; font-size: 12px;}
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-    </style>
-</head>
-<body>
-    <h2 style="text-align: center;">Laporan Harian Kasir</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Produk</th>
-                <th>Tanggal</th>
-                <th>Harga Produk</th>
-                <th>qty</th>
-                <th>Total</th>
-                <th>Kasir</th>
-            </tr>
-        </thead>
-        <thbody>
-            @php $no = 1; @endphp
-            @foreach($transactions as $trx)
-            @foreach($trx->items as $item)
-            <tr>
-                <td>{{ $no++ }}</td>
-                <td>{{ $item->product->name }}</td>
-                <td>{{ $trx->created_at }}</td>
-                <td>{{ number_format($item->price) }}</td>
-                <td>{{ $item->qty }}</td>
-                <td>{{ number_format($item->subtotal) }}</td>
-                <td>{{ $trx->user->name }}</td>
-            </tr>
-            @endforeach
-            @endforeach
-        </thbody>
-    </table>
-    
-</body>
-</html>
+@extends('layouts.app')
+@section('title','Arsip Transaksi Kasir')
+<!-- kasir ke history -->
+@section('content')
+<div class="container">
+
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center" 
+            style="background-color: #00458e; color: white;">
+            <h4 class="mb-0" style="color: white;">Arsip Transaksi / Riwayat Kwitansi</h4>
+        
+            <a href="{{ route('kasir.index') }}" class="btn btn-outline-light btn-sm">
+                <- Kembali
+            </a>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th>No</th>
+                        <th>Invoice</th>
+                        <th>Tanggal</th>
+                        <th>Nama</th>
+                        <th>Kelas</th>
+                        <th>Total</th>
+                        <th>Kasir</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @php $no = 1; @endphp
+
+                    @forelse($transactions as $trx)
+                    <tr class="trx-row">
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $trx->invoice }}</td>
+                        <td>{{ $trx->created_at->format('d-m-Y H:i') }}</td>
+                        <td>{{ $trx->student_name }}</td>
+
+                        <td>
+                            @foreach($trx->items as $item)
+                                {{ $item->product_name }} - {{ $item->class_type }}<br>
+                            @endforeach
+                        </td>
+
+                        <td>Rp {{ number_format($trx->total,0,',','.') }}</td>
+                        <td>{{ $trx->user->name ?? '-' }}</td>
+
+                        <td>
+                            <a href="/kasir/receipt/{{ $trx->id }}?from=arsip" class="btn btn-sm btn-success">
+                                Cetak
+                            </a>
+                            <a href="/kasir/receipt-pdf/{{ $trx->id }}" class="btn btn-sm btn-danger">
+                                PDF
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">
+                            Belum ada arsip transaksi
+                        </td>
+                    </tr>
+                    @endforelse
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+@endsection
+
+
+@section('scripts')
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const searchInput = document.getElementById('search-product');
+
+    if(searchInput){
+        searchInput.addEventListener('keyup', function(){
+
+            let keyword = this.value.toLowerCase();
+            let rows = document.querySelectorAll('.trx-row');
+
+            rows.forEach(function(row){
+                let text = row.innerText.toLowerCase();
+
+                if(text.includes(keyword)){
+                    row.style.display = '';
+                }else{
+                    row.style.display = 'none';
+                }
+            });
+
+        });
+    }
+
+});
+</script>
+@endsection
