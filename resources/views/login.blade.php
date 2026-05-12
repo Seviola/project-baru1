@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon">
+  <link rel="icon" href="{{ asset('assets/images/Scomptec.png') }}" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}">
@@ -58,7 +58,7 @@
       background-size: 44px 44px;
     }
     .brand { position: relative; z-index: 2; }
-    .brand-logo { height: 130px; object-fit: contain; filter: brightness(0) invert(1); margin-top: -10px; display: block; }
+    .brand-logo { height: 130px; object-fit: contain; margin-top: -10px; display: block; filter: brightness(0) invert(1); }
     .left-content { position: relative; z-index: 2; }
     .left-tagline { font-size: 1.85rem; font-weight: 800; line-height: 1.25; color: #fff; margin-bottom: 12px; }
     .left-tagline .accent { color: var(--red); display: block; }

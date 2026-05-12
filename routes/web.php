@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ProfileController;
 
 // PUBLIC ROUTES
 Route::match(['get', 'post'], '/login', [PageController::class, 'login'])->name('login');
@@ -65,6 +66,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/classroom', [ClassRoomController::class, 'index'])->name('classroom.index');
         Route::get('/report/transaksi', [PosController::class, 'dailyReport'])->name('report.transaksi');
     });
+
+    // ================= PROFIL =================
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // ================= USER =================
     Route::middleware('role:admin,user')->group(function () {

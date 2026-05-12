@@ -76,7 +76,7 @@ class PosController extends Controller
         if (auth()->user()->role != 'admin' &&
             $transaction->user_id != auth()->id()) {
                 abort(403, 'Akses ditolak');
-            }
+        }
 
         return view('pos.receipt_print', compact('transaction'));
     }
