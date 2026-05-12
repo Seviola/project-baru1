@@ -70,6 +70,7 @@ class PosController extends Controller
     public function receipt($id)
     {
         $transaction = Transaction::with('items','user')->findOrFail($id);
+
         return view('pos.receipt_print', compact('transaction'));
     }
 
