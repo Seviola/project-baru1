@@ -2,17 +2,24 @@
 <html>
 <head>
     <title>KWITANSI</title>
-
+<!-- kwitansi cetak browser bukan pdf -->
     <style>
-        body{
-            font-family: monospace;
-            width:300px;
-            margin:auto;
-            font-size:12px;
-            color:#000;
+        @page{
+            size: A4 portrait;
+            margin: 1cm 1cm 1cm 1cm;
         }
 
-        h3,p{
+        body{
+            font-family: DejaVu Sans, sans-serif;
+            width:100%;
+            max-width:500px;
+            margin:0 auto;
+            font-size:14px;
+            color:#000;
+            line-height:1.6;
+        }
+
+        h1,h3,p{
             text-align:center;
             margin:2px 0;
         }
@@ -55,16 +62,15 @@
         }
 
         .social-table{
-            width:100%;
-            margin-top:5px;
+            width:auto;
+            margin:5px auto 0;
             border-collapse: collapse;
         }
 
         .social-table td{
-            width:50%;
-            text-align:center;
-            padding:2px 0;
+            padding:2px 12px;
             font-size:12px;
+            text-align:center;
         }
 
         .social-table i{
@@ -75,20 +81,31 @@
             button{
                 display:none;
             }
+
+            body{
+                margin:0 auto;
+                max-width:700px;
+            }
         }
     </style>
 </head>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <body onload="window.print()">
 
 <script>
 window.onafterprint = function(){
-    window.location.href = "/kasir";
+    let from ="{{ request('from') }}";
+    if(from === 'arsip'){
+        window.location.href = "/report/transaksi";
+    }else{
+        window.location.href = "/kasir";
+    }
 }
 </script>
 
-<h3>PT SCOMPTEC EDUKOM PERSADA</h3>
+<h1 style="color: #180083;">PT SCOMPTEC EDUKOM PERSADA</h1>
 <p>
     <i class="fa-solid fa-location-dot"></i>
     Head Office: Jl. Kayon 24 Surabaya 60271 - Indonesia
@@ -140,21 +157,21 @@ window.onafterprint = function(){
 
 <hr>
 
-<table style="margin-top:20px;">
+<table style="margin-top:50px;">
     <tr>
         <td style="width:50%; text-align:left;">
             Metode Pembayaran:<br>
             {{ $transaction->payment_method }}
         </td>
 
-        <td style="width:50%; text-align:center;">
-            Surabaya, {{ date('d-m-Y', strtotime($transaction->created_at)) }}<br><br><br><br>
+        <td style="width:50%; text-align:right; padding-right:30px;">
+            Surabaya, {{ date('d-m-Y', strtotime($transaction->created_at)) }}<br><br><br><br><br><br><br>
             (_________________)
         </td>
     </tr>
 </table>
 
-<div class="thanks">
+<div class="thanks" style="text-align:right;">
     Simpan kwitansi ini sebagai bukti pembayaran
 </div>
 

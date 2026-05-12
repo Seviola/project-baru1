@@ -131,12 +131,16 @@
         </div>
 
         <div class="d-flex gap-2 mt-3">
-            <button class="btn btn-outline-warning" onclick="setorUang()">
+            <button class="btn btn-outline-danger" onclick="setorUang()">
                 Setor Uang
             </button>
 
-            <a href="/report/setoran" class="btn btn-outline-info">
+            <a href="/report/setoran" class="btn btn-outline-success">
                 Report Setoran Saya
+            </a>
+
+            <a href="/report/transaksi" class="btn btn-outline-secondary">
+                History Kwitansi
             </a>
         </div>
 
@@ -401,7 +405,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if(data.transaction_id){
-                window.location.href = "/kasir/receipt/" + data.transaction_id;
+                window.location.href = "/kasir/receipt/" + data.transaction_id + "?from=pos";
             }else{
                 alert("Transaksi gagal tanpa pesan");
             }
