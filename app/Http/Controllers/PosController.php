@@ -131,27 +131,32 @@ class PosController extends Controller
         }
     }
 
-    private function terbilang($angka)
+    public static function terbilang($angka)
     {
         $angka = abs($angka);
-        $baca = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+
+        $baca = [
+            "", "satu", "dua", "tiga", "empat",
+            "lima", "enam", "tujuh", "delapan",
+            "sembilan", "sepuluh", "sebelas"
+        ];
 
         if ($angka < 12)
             return " " . $baca[$angka];
         elseif ($angka < 20)
-            return $this->terbilang($angka - 10) . " belas";
+            return self::terbilang($angka - 10) . " belas";
         elseif ($angka < 100)
-            return $this->terbilang($angka / 10) . " puluh" . $this->terbilang($angka % 10);
+            return self::terbilang($angka / 10) . " puluh" . self::terbilang($angka % 10);
         elseif ($angka < 200)
-            return " seratus" . $this->terbilang($angka - 100);
+            return " seratus" . self::terbilang($angka - 100);
         elseif ($angka < 1000)
-            return $this->terbilang($angka / 100) . " ratus" . $this->terbilang($angka % 100);
+            return self::terbilang($angka / 100) . " ratus" . self::terbilang($angka % 100);
         elseif ($angka < 2000)
-            return " seribu" . $this->terbilang($angka - 1000);
+            return " seribu" . self::terbilang($angka - 1000);
         elseif ($angka < 1000000)
-            return $this->terbilang($angka / 1000) . " ribu" . $this->terbilang($angka % 1000);
+            return self::terbilang($angka / 1000) . " ribu" . self::terbilang($angka % 1000);
         elseif ($angka < 1000000000)
-            return $this->terbilang($angka / 1000000) . " juta" . $this->terbilang($angka % 1000000);
+            return self::terbilang($angka / 1000000) . " juta" . self::terbilang($angka % 1000000);
     }
 
     public function setor()
@@ -170,12 +175,12 @@ class PosController extends Controller
     {
         if (auth()->user()->role == 'admin') {
             // Admin bisa lihat semua transaksi
-            $transactions = Transaction::with(['items','user'])
+            $transactions = Transaction::with(['items.product','user'])
                 ->latest()
                 ->get();
         } else {
             // Kasir hanya lihat transaksi miliknya
-            $transactions = Transaction::with(['items','user'])
+            $transactions = Transaction::with(['items.product','user'])
                 ->where('user_id', auth()->id())
                 ->latest()
                 ->get();

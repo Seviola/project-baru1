@@ -2,79 +2,215 @@
 <html>
 <head>
     <title>KWITANSI</title>
-<!-- kwitansi cetak browser bukan pdf -->
+
     <style>
         @page{
-            size: A4 portrait;
-            margin: 1cm 1cm 1cm 1cm;
+            size: 20.5cm 10.8cm;
+            margin: 0;
         }
 
         body{
-            font-family: DejaVu Sans, sans-serif;
-            width:100%;
-            max-width:500px;
-            margin:0 auto;
-            font-size:14px;
-            color:#000;
-            line-height:1.6;
+            margin:0;
+            padding:0;
+            font-family:DejaVu Sans, sans-serif;
+            font-size:12px;
+            color:#2f2f7f;
+            background:#fff;
         }
 
-        h1,h3,p{
+        .wrapper{
+            width:20.5cm;
+            height:10.8cm;
+            overflow:hidden;
+            position:relative;
+            margin:auto;
+        }
+
+        /* SIDEBAR KIRI */
+        .sidebar{
+            position:absolute;
+            top:0;
+            left:0;
+            width:3.5cm;
+            height:10.8cm;
+            border-right:2px solid #2f2f7f;
+        }
+
+        .sidebar-inner{
+            position:absolute;
+            top:0;
+            left:0;
+            width:10.8cm;
+            height:3.5cm;
+            transform:rotate(-90deg) translateX(-100%);
+            transform-origin:top left;
+
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            padding:2px 4px;
+            box-sizing:border-box;
+        }
+
+        .sidebar-content{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            height:100%;
+        }
+
+        .logo-area{
+            width:11cm;
             text-align:center;
-            margin:2px 0;
         }
 
-        table{
+        .logo{
             width:100%;
-            border-collapse: collapse;
+            height:auto;
+            display:block;
         }
 
-        td{
-            padding:2px 0;
-            vertical-align: top;
+        .info-area{
+            margin-top:-8px;
+            padding-right:14px; /* tambah jarak dari garis */
+            font-size:10px;
+            line-height:1.2;
+            color:#2f2f7f;
+            text-align:center;
+            font-weight:bold;
+            box-sizing:border-box;
         }
 
-        .right{
+        .social-row{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:2px;
+        }
+
+        .social-row td{
+            font-size:10px;
+            color:#2f2f7f;
+            padding:0 6px; /* kasih jarak kanan kiri */
+            line-height:1.1;
+            text-align:center;
+            white-space:nowrap;
+        }
+
+        /* CONTENT */
+        .content{
+            position:absolute;
+            top:0;
+            left:3.5cm;
+            width:17cm;
+            height:10.8cm;
+            padding:12px 15px;
+            box-sizing:border-box;
+        }
+
+        .title{
             text-align:right;
+            font-size:24px;
+            font-weight:bold;
+            font-style:italic;
+            color:#2f2f7f;
+            margin-bottom:20px;
+            padding-right:2cm;
+            letter-spacing:1px;
         }
 
-        .center{
+        .box-line{
+            border-top:2px solid #2f2f7f;
+            border-bottom:2px solid #2f2f7f;
+            padding:6px 14px;
+            margin-right:2cm;
+            margin-bottom:22px;
+            display:flex;
+            align-items:center;
+        }
+
+        .box-title{
+            font-weight:bold;
+            font-size:13px;
+            width:120px;
+        }
+
+        .box-text{
+            font-weight:bold;
+            font-size:14px;
+        }
+
+        .amount{
+            font-size:16px;
+        }
+
+        .form-low{
+            display:flex;
+            align-items:center;
+            margin-bottom:16px;
+            white-space:nowrap; /* supaya tidak turun */
+        }
+
+        .label{
+            width:170px;
+            font-size:12px;
+            white-space:nowrap; /* tulisan tetap sejajar */
+        }
+
+        .colon{
+            width:18px;
             text-align:center;
         }
 
-        hr{
-            border:none;
-            border-top:1px dashed #000;
-            margin:6px 0;
+        .fill-line{
+            display:flex;
+            align-items:center;
+            height:22px;
+            width:calc(100% - 7cm); /* paksa sama panjang */
+            max-width:12cm;
+            border-bottom:1px dotted #9b9bc7;
+            padding:0 6px 2px 6px;
+            box-sizing:border-box;
+            font-weight:bold;
+            font-size:13px;
+            color:#2f2f7f;
+            white-space:nowrap; /* jawaban tidak turun */
+            overflow:hidden;
         }
 
-        .thanks{
-            margin-top:10px;
-            text-align:center;
-            font-size:11px;
+        .payment-box{
+            margin-top:28px;
+        }
+
+        .checkbox{
+            font-size:14px;
+            margin-right:28px;
+        }
+
+        .signature{
+            position:absolute;
+            right:2cm;
+            bottom:15px; /* posisi ...... */
+            text-align:center; 
+            width:240px;
+            color:#2f2f7f;
+        }
+
+        .signature-line{
+            border-bottom:1px dotted #2f2f7f;
+            margin-top:45px;
         }
 
         button{
-            margin-top:10px;
-            width:100%;
-            padding:6px;
+            position:fixed;
+            bottom:10px;
+            left:10px;
+            padding:8px 14px;
+            border:none;
+            background:#2f2f7f;
+            color:#fff;
             cursor:pointer;
-        }
-
-        .social-table{
-            width:auto;
-            margin:5px auto 0;
-            border-collapse: collapse;
-        }
-
-        .social-table td{
-            padding:2px 12px;
-            font-size:12px;
-            text-align:center;
-        }
-
-        .social-table i{
-            margin-right:4px;
+            border-radius:4px;
         }
 
         @media print{
@@ -83,20 +219,18 @@
             }
 
             body{
-                margin:0 auto;
-                max-width:700px;
+                margin:0;
             }
         }
     </style>
 </head>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <body onload="window.print()">
 
 <script>
 window.onafterprint = function(){
     let from ="{{ request('from') }}";
+
     if(from === 'arsip'){
         window.location.href = "/report/transaksi";
     }else{
@@ -105,76 +239,143 @@ window.onafterprint = function(){
 }
 </script>
 
-<h1 style="color: #180083;">PT SCOMPTEC EDUKOM PERSADA</h1>
-<p>
-    <i class="fa-solid fa-location-dot"></i>
-    Head Office: Jl. Kayon 24 Surabaya 60271 - Indonesia
-</p>
+<div class="wrapper">
 
-<table class="social-table">
-    <tr>
-        <td>
-            <i class="fa-solid fa-phone"></i> (031) 5315678
-        </td>
-        <td>
-            <i class="fa-brands fa-instagram"></i> @Scomptec_learning
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <i class="fa-brands fa-facebook"></i> scomptec-learning
-        </td>
-        <td>
-            <i class="fa-brands fa-tiktok"></i> scomptec.official
-        </td>
-    </tr>
-</table>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
 
-<hr>
+        <div class="sidebar-inner">
 
-<p><b>NO :</b> {{ $transaction->invoice }}</p>
-<p><b>Tanggal :</b> {{ now()->format('d-m-Y H:i:s') }}</p>
+            <div class="sidebar-content">
 
-<hr>
+                <div class="logo-area">
+                    <img class="logo"
+                         src="{{ asset('assets/images/kwitansi.png') }}">
+                </div>
 
-<p style="text-align:left;">Telah Terima Dari : {{ $transaction->student_name }}</p>
-<p style="text-align:left;">
-    Uang Sebanyak : Rp {{ number_format($transaction->total,0,',','.') }}
-</p>
+                <div class="info-area">
 
-<p style="text-align:left;">
-    Untuk Pembayaran :
-    @foreach($transaction->items as $item)
-        {{ $item->product_name }}<br>
-        Jenis Kelas : {{ $item->class_type }}<br><br>
-    @endforeach
-</p>
+                    <p>
+                        Head Office : Jl. Kayon 24 Surabaya 60271 - Indonesia
+                    </p>
 
-<p style="text-align:left;">
-    Jumlah : Rp {{ number_format($transaction->total,0,',','.') }}
-</p>
+                    <table class="social-row">
+                        <tr>
+                            <td>☎ (031) 5315678</td>
+                            <td>Instagram : @scomptec_learning</td>
+                        </tr>
 
-<hr>
+                        <tr>
+                            <td>Facebook : scomptec-learning</td>
+                            <td>TikTok : scomptec.official</td>
+                        </tr>
+                    </table>
 
-<table style="margin-top:50px;">
-    <tr>
-        <td style="width:50%; text-align:left;">
-            Metode Pembayaran:<br>
-            {{ $transaction->payment_method }}
-        </td>
+                </div>
 
-        <td style="width:50%; text-align:right; padding-right:30px;">
-            Surabaya, {{ date('d-m-Y', strtotime($transaction->created_at)) }}<br><br><br><br><br><br><br>
-            (_________________)
-        </td>
-    </tr>
-</table>
+            </div>
 
-<div class="thanks" style="text-align:right;">
-    Simpan kwitansi ini sebagai bukti pembayaran
+        </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <div class="title">
+            KWITANSI
+        </div>
+
+        <!-- NO -->
+        <div class="box-line">
+            <span class="box-title">No.</span>
+
+            <span class="box-text">
+                {{ $transaction->invoice }}
+            </span>
+        </div>
+
+        <!-- TELAH TERIMA -->
+        <div class="form-low">
+            <span class="label">Telah Terima Dari</span>
+
+            <span class="colon">:</span>
+
+            <span class="fill-line">
+                {{ $transaction->student_name }}
+            </span>
+        </div>
+
+        <!-- UANG -->
+        <div class="form-low">
+            <span class="label">Uang Sebanyak</span>
+
+            <span class="colon">:</span>
+
+            <span class="fill-line">
+                {{ ucwords(\App\Http\Controllers\PosController::terbilang($transaction->total)) }} Rupiah
+            </span>
+        </div>
+
+        <!-- PEMBAYARAN -->
+        <div class="form-low">
+            <span class="label">Untuk Pembayaran</span>
+
+            <span class="colon">:</span>
+
+            <span class="fill-line">
+                @foreach($transaction->items as $item)
+                    {{ $item->product_name }} - {{ $item->class_type }}
+                    @if(!$loop->last), @endif
+                @endforeach
+            </span>
+        </div>
+
+        <!-- JUMLAH -->
+        <div class="box-line" style="margin-top:28px;">
+            <span class="box-title" style="font-style:italic;">
+                Jumlah Rp.
+            </span>
+
+            <span class="box-text amount">
+                {{ number_format($transaction->total,0,',','.') }}
+            </span>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="payment-box">
+
+            <span class="label">Pembayaran Via</span>
+
+            <span class="colon">:</span>
+
+            <span class="checkbox">
+                {{ strtolower($transaction->payment_method) == 'cash' ? '☑' : '☐' }} Cash
+            </span>
+
+            <span class="checkbox">
+                {{ strtolower($transaction->payment_method) == 'transfer' ? '☑' : '☐' }} Transfer
+            </span>
+
+        </div>
+
+        <!-- TTD -->
+        <div class="signature">
+
+            Surabaya,
+            {{ date('d F Y', strtotime($transaction->created_at)) }}
+
+            <div class="signature-line"></div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<button onclick="window.print()">Print Ulang</button>
+<button onclick="window.print()">
+    Print Ulang
+</button>
 
 </body>
 </html>

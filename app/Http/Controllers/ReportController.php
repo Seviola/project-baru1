@@ -31,28 +31,29 @@ class ReportController extends Controller
 
     public function depositReport(Request $request)
     {
-        $query = \App\Models\Transaction::with('items', 'user')
+        $query =Transaction::with('user')
             ->where('is_deposited', 1);
         
         // Filter Tanggal
-        if ($request->start_date && $request->end_date) {
-            $query->whereBetween('created_at', [
-                $request->start_date,
-                $request->end_date  
-            ]);
+        if($request->start_date) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if($request->end_date) {
+            $query->whereDate('created_at', '<=', $request->end_date);
         }
 
         // Kasir lihat milik sendiri
         if (auth()->user()->role === 'kasir') {
             $query->where('user_id', auth()->id());
-        }
+        } else {
 
         // Admin bisa filter kasir
         if ($request->user_id) {
             $query->where('user_id', $request->user_id);
+            }
         }
-
-        $transactions = $query->get();
+        
+        $transactions = $query->latest()->get();
         $users = \App\Models\User::where('role', 'kasir')->get();
 
         return view('reports.deposit', compact('transactions', 'users'));

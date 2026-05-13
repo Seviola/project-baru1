@@ -1,69 +1,151 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- Kwitansi pdf -->
     <meta charset="utf-8">
     <title>Kwitansi PDF</title>
+
     <style>
         @page {
-            margin: 1cm 1cm 1cm 1cm;
+            size: 20.5cm 10.8cm;
+            margin: 0;
         }
 
         body{
-            font-family: DejaVu Sans, sans-serif;
-            font-size:11px;
-            color:#000;
-            margin:10px;
-            line-height:1.2;
+            margin:0;
+            padding:0;
+            font-family:DejaVu Sans, sans-serif;
+            font-size:12px;
+            color:#2f2f7f;
         }
 
-        .header{
+        .wrapper{
+            width:20.5cm;
+            height:10.8cm;
+            overflow:hidden;
+            position:relative;
+        }
+
+        /* SIDEBAR KIRI */
+        .sidebar{
+            position:absolute;
+            top:0;
+            left:0;
+            width:3.5cm;
+            height:10.8cm;
+            background:#fff;
+        }
+
+        .sidebar-inner{
+            position:absolute;
+            top:0;
+            left:0;
+            width:10.8cm;
+            height:3.5cm;
+
+            /* putar seperti contoh gambar */
+            transform:rotate(-90deg) translateX(-100%);
+            transform-origin:top left;
+
+            box-sizing:border-box;
+
+            /* dibuat center */
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            padding:2px 4px;
+        }
+
+        .sidebar-content{
+            display:flex;
+            flex-direction: column; /* logo di atas, info di bawah */
+            align-items:center;
+            justify-content:center;
+            height:100%;
+        }
+
+        /* Logo diperbesar */
+        .logo-area{
+            width:11cm; /*ubah ukuran gambar*/
             text-align:center;
-            border-bottom:1px solid #000;
-            padding-bottom:4px;
-            margin-bottom:8px;
         }
 
         .logo{
             width:100%;
-            max-width:500px;
             height:auto;
-            margin-bottom:3px;
+            display:block;
         }
 
-        .header p{
-            margin:1px 0;
+        .info-area{
+            padding-left:0;
+            margin-top:4px;
             font-size:10px;
-            color:#000;
+            line-height:1.2;
+            color:#2f2f7f;
+
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            text-align:center; /* bikin semua text ke tengah */
         }
 
-        .icon{
-            width:9px;
-            height:9px;
-            vertical-align:middle;
-            margin-right:3px;
+        .info-area p{
+            margin:0;
         }
 
-        .social-table{
-            margin:2px auto 0;
-            width:90%;
+        /* supaya sejajar */
+        .social-row{
+            width:100%;
+            border-collapse:collapse;
+            border-spacing:0;
+            margin-top:2px;
+        }
+
+        .social-row td{
+            width:auto;
             font-size:10px;
-            color:#000;
+            color:#2f2f7f;
+            vertical-align:top;
+            padding:0;   /* hilangkan jarak */
+            margin:0;
+            line-height:1.1;
+            text-align:center;
+            white-space:nowrap; /* biar tidak turun baris */
         }
 
-        .social-table td{
-            padding:1px 5px;
-            text-align:left;
-            vertical-align:middle;
+        /* biru */
+        .bottom-line{
+            position:absolute;
+            left:0;
+            right:0;
+            bottom:0;
+
+            height:3px;
+            background:#2f2f7f;
+        }
+
+        /* KONTEN KANAN*/
+        .content{
+            position:absolute;
+            top:0;
+            left:3.5cm; /* sejajar setelah sidebar */
+            width:17cm; /* 20.5 - 3.5 */
+            height:10.8cm;
+            padding:12px 15px;
+            box-sizing:border-box;
+            
         }
 
         .title{
-            text-align:center;
-            font-size:15px;
+            text-align:right;
+            font-size:24px;
             font-weight:bold;
-            margin-bottom:6px;
-            text-decoration:underline;
-            color:#000;
+            font-style:italic;
+            color:#2f2f7f;
+            margin-bottom:14px;
+            padding-right:2cm;
+            letter-spacing:1px;
+            box-sizing:border-box;
         }
 
         table{
@@ -72,123 +154,233 @@
         }
 
         td{
-            padding:1px 0;
+            padding:2px 0;
             vertical-align:top;
-            color:#000;
+            font-size:13px;
+            font-weight:bold;
+            color:#2f2f7f;
         }
 
         .line{
-            border-top:1px dashed #000;
-            margin:6px 0;
+            /* border-top:1px dashed #000;
+            margin:8px 0; */
+            display:none;
         }
 
         .item-box{
-            margin-left:8px;
-            margin-bottom:2px;
-            color:#000;
-        }
-
-        p{
-            margin:4px 0;
+            margin-left:10px;
+            margin-bottom:4px;
         }
 
         .ttd{
-            margin-top:12px;
+            margin-top:18px;
             text-align:right;
-            color:#000;
+            padding-right:2cm;
+            box-sizing:border-box;
         }
 
-        .footer{
-            margin-top:8px;
+        .amount{
+            font-size:15px;
+            font-weight:bold;
+            color:#1f1f8f;
+        }
+
+        .form-row{
+            margin-bottom:14px;
+            white-space:nowrap;
+        }
+
+        .label{
+            display:inline-block;
+            width:140px;
+            vertical-align:top;
+            font-size:12px;
+        }
+
+        .fill-line{
+            flex:1;
+            border-bottom:1px dotted #9b9bc7;
+            min-height:20px;
+            padding:0 6px 3px 6px;
+            font-weight:bold;
+            color:#2f2f7f;
+            box-sizing:border-box;
+        }
+
+        .box-line{
+            border-top:2px solid #2f2f7f;
+            border-bottom:2px solid #2f2f7f;
+            padding:4px 10px;
+            margin-bottom:18px;
+            margin-right:2cm;
+            position:relative;
+            box-sizing:border-box;
+        }
+
+        .box-fill{
+            display:inline-block;
+            border-bottom:3px solid #2f2f7f;
+            margin-left:8px;
+            min-width:250px;
+            max-width:9cm;
+            padding:0 6px 2px 6px;
+            vertical-align:middle;
+            font-weight:bold;
+        }
+
+        .payment-box{
+            margin-top:18px;
+        }
+
+        .checkbox{
+            font-size:14px;
+            margin-right:15px;
+        }
+
+        .signature{
+            position:absolute;
+            right:2cm;
+            bottom:55px;
             text-align:center;
-            font-size:9px;
-            color:#000;
+            width:220px;
+        }
+
+        .signature-line{
+            border-bottom:1px dotted #2f2f7f;
+            margin-top:55px;
+        }
+
+        .watermark{
+            position:absolute;
+            top:45%;
+            left:55%;
+            transform:translate(-50%,-50%) rotate(-18deg);
+            opacity:0.08;
+            width:60%;
+        }
+
+        .box-text{
+            display:inline-block;
+            margin-left:8px;
+            padding:0 6px 2px 6px;
+            vertical-align:middle;
+            font-weight:bold;
+        }
+
+        .form-low{
+            display:flex;
+            align-items:center;
+            margin-bottom:14px;
+        }
+
+        .form-low .label{
+            width:170px;
+        }
+
+        .form-low .colon{
+            width:15px;
+            text-align:center;
         }
     </style>
 </head>
+
 <body>
 
-<div style="width:100%; max-width:700px; margin:0 auto; text-align:center;">
+<div class="wrapper">
 
-    <div class="header" style="text-align:center;">
-        <img class="logo" src="{{ public_path('assets/images/logo-scomptec.png') }}"
-             style="display:block; margin:0 auto; max-width:500px; width:100%;">
+    <!--  SIDEBAR KIRI-->
+    <div class="sidebar">
 
-        <p style="margin:3px 0;">
-            Head Office: Jl. Kayon 24 Surabaya 60271 - Indonesia
-        </p>
+        <div class="sidebar-inner">
+            <div class="sidebar-content">
+                <div class="logo-area">
+                    <img class="logo"
+                         src="{{ public_path('assets/images/kwitansi.png') }}">
+                </div>
 
-        <table class="social-table" style="margin:5px auto 0; width:auto;">
-            <tr>
-                <td style="padding:2px 12px;">☎ (031) 5315678</td>
-                <td style="padding:2px 12px;">IG:@Scomptec_learning</td>
-            </tr>
-            <tr>
-                <td style="padding:2px 12px;">fb:scomptec-learning</td>
-                <td style="padding:2px 12px;">Tiktok:scomptec.official</td>
-            </tr>
-        </table>
-    </div>
-</div>
+                <div class="info-area">
+                    <p>
+                        Head Office : Jl. Kayon 24 Surabaya 60271 - Indonesia
+                    </p>
+                     <table class="social-row">
+                        <tr>
+                            <td>☎ (031) 5315678</td>
+                            <td>Instagram : @scomptec_learning</td>
+                        </tr>
 
-    <div class="title">KWITANSI PEMBAYARAN</div>
+                        <tr>
+                            <td>Facebook : scomptec-learning</td>
+                            <td>TikTok : scomptec.official</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
-    <table>
-        <tr>
-            <td width="35%">No Invoice</td>
-            <td>: {{ $transaction->invoice }}</td>
-        </tr>
-        <tr>
-            <td>Tanggal</td>
-            <td>: {{ date('d F Y', strtotime($transaction->created_at)) }}</td>
-        </tr>
-        <tr>
-            <td>Kasir</td>
-            <td>: {{ $transaction->user->name ?? '-' }}</td>
-        </tr>
-    </table>
+            <div class="bottom-line"></div>
 
-    <div class="line"></div>
-
-    <p><strong>Telah Terima Dari :</strong> {{ $transaction->student_name }}</p>
-    <p><strong>Untuk Pembayaran :</strong></p>
-
-    @foreach($transaction->items as $item)
-    <div class="item-box">
-        • {{ $item->product_name }}<br>
-        Jenis Kelas : {{ $item->class_type }}
-    </div>
-    @endforeach
-
-    <div class="line"></div>
-
-    <table>
-        <tr>
-            <td width="35%">Jumlah Bayar</td>
-            <td>: Rp {{ number_format($transaction->total,0,',','.') }}</td>
-        </tr>
-        <tr>
-            <td>Metode Bayar</td>
-            <td>: {{ $transaction->payment_method }}</td>
-        </tr>
-    </table>
-
-    <div class="ttd">
-        Surabaya, {{ date('d F Y', strtotime($transaction->created_at)) }}
-
-        <div style="height:80px;"></div>
-
-        <div style="border-top:1px solid #000; width:200px; margin-left:auto;"></div>
-        <br>
-        <strong>{{ $transaction->user->name ?? '-' }}</strong>
+        </div>
     </div>
 
-    <!--
-    <div class="footer">
-        Simpan kwitansi ini sebagai bukti pembayaran resmi.
-    </div>
-    -->
+    <!--KONTEN KANAN-->
+    <div class="content">
 
+        <div class="title">
+            KWITANSI
+        </div>
+            <div class="box-line">
+                <span style="font-weight:bold;">No.</span>
+                <span class="box-text">{{ $transaction->invoice }}</span>
+            </div>
+            <div class="form-low">
+                <span class="label">Telah Terima Dari</span>
+                <span class="colon">:</span>
+                <span class="fill-line">{{ $transaction->student_name }}</span>
+            </div>
+            <div class="form-low">
+                <span class="label">Uang Sebanyak</span>
+                <span class="colon">:</span>
+                <span class="fill-line">{{ ucwords(\App\Http\Controllers\PosController::terbilang($transaction->total)) }} Rupiah</span>
+            </div>
+            <div class="form-low">
+                <span class="label">Untuk Pembayaran</span>
+                <span class="colon">:</span>
+                <span class="fill-line">
+                    @foreach($transaction->items as $item)
+                        {{ $item->product_name }} - {{ $item->class_type }}
+                        @if(!$loop->last), @endif
+                    @endforeach
+                </span>
+
+            </div>
+            <div class="box-line" style="margin-top:28px;">
+                <span style="font-style:italic;font-weight:bold;">
+                    Jumlah Rp.
+                </span>
+
+                <span class="box-text amount">
+                    {{ number_format($transaction->total,0,',','.') }}
+                </span>
+            </div>
+            <div class="payment-box">
+                <span class="label">Pembayaran Via</span>
+                :
+
+                <span class="checkbox">
+                    {{ strtolower($transaction->payment_method) == 'cash' ? '☑' : '☐' }} Cash
+                </span>
+
+                <span class="checkbox">
+                    {{ strtolower($transaction->payment_method) == 'transfer' ? '☑' : '☐' }} Transfer
+                </span>
+            </div>
+
+        <div class="signature">
+            Tanggal,
+            {{ date('d F Y', strtotime($transaction->created_at)) }}
+
+            <div class="signature-line"></div>
+        </div>
+    </div>
 </div>
 
 </body>
