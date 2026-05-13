@@ -4,29 +4,32 @@
 <div class="container mt-4">
 
     <div id="print-area">
-        <h3>Report Harian Penjualan</h3>
+        <h3>Report Harian Kelas</h3>
 
         <table class="table table-bordered mt-3">
             <thead>
                 <tr>
-                    <th>Nama Produk</th>
+                    <th>Nama Kelas</th>
                     <th>Tanggal</th>
-                    <th>Harga Produk</th>
-                    <th>Qty</th>
+                    <th>Biaya Kursus</th>
+                    <th>Ruang Kelas</th>
                     <th>Total</th>
-                    <th>Kasir</th>
+                    <th>Nama Siswa</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($transactions as $trx)
                     @foreach($trx->items as $item)
-                    <tr>
-                        <td>{{ $item->product_name }}</td>
-                        <td>{{ $trx->created_at->format('Y-m-d') }}</td>
-                        <td>{{ number_format($item->price,0,',','.') }}</td>
-                        <td>{{ number_format($item->qty,0,',','.') }}</td>
-                        <td>{{ number_format($item->subtotal,0,',','.') }}</td>
-                        <td>{{ optional($trx->user)->name ?? '-' }}</td>
+                    <tr class="report-row">
+                        <td>{{ $item->product_name }}
+                            @if($item->class_type)
+                                - {{ $item->class_type }}
+                            @endif</td>
+                        <td>{{ $trx->created_at->format('d-m-Y') }}</td>
+                        <td>Rp {{ number_format($item->price,0,',','.') }}</td>
+                        <td>{{ $item->product->price ?? '-' }}</td>
+                        <td>Rp {{ number_format($item->subtotal,0,',','.') }}</td>
+                        <td>{{ $trx->student_name }}</td>
                     </tr>
                     @endforeach
                 @empty
@@ -60,6 +63,24 @@
 function printReport() {
     window.print();
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+    const searchInput = document.getElementById('search-product');
+    if(searchInput){
+        searchInput.addEventListener('keyup', function(){
+            let keyword = this.value.toLowerCase();
+            let rows = document.querySelectorAll('.report-row');
+            rows.forEach(function(row){
+                let text = row.innerText.toLowerCase();
+                if(text.includes(keyword)){
+                    row.style.display = '';
+                }else{
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+});
 </script>
 
 <style>
@@ -78,6 +99,8 @@ function printReport() {
         left: 0;
         top: 0;
         width: 100%;
+        font-family: monospace;
+        font-size: 11px;
     }
 
     button {

@@ -16,10 +16,17 @@ class PageController extends Controller
     public function home()
     {
         $totalProducts = Product::count();
-        $totalTransactions = Transaction::count();
-        $totalVendors = Vendor::count();
+        $totalTransactionsToday = \App\Models\Transaction::whereDate('created_at', today())->count();
+
+        $totalTransactionsMonth = \App\Models\Transaction::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
         $todayIncome = Transaction::whereDate('created_at', today())->sum('total');
+
+        $monthIncome = \App\Models\Transaction::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('total');
 
         $lowStockProducts = Product::where('stock','<',5)
                             ->orderBy('stock','asc')
@@ -45,9 +52,10 @@ class PageController extends Controller
 
         return view('home', compact(
             'totalProducts',
-            'totalTransactions',
-            'totalVendors',
+            'totalTransactionsToday',
+            'totalTransactionsMonth',
             'todayIncome',
+            'monthIncome',
             'lowStockProducts',
             'topProducts',
             'weeklySales'

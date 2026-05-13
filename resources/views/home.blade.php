@@ -38,71 +38,52 @@
         @endif
 
         <!-- [ sample-page ] start -->
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 text-muted">Total Produk</h6>
-              <h4>{{ $totalProducts }}</h4>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 text-muted">Total Transaksi</h6>
-              <h4>{{ $totalTransactions }}</h4>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 text-muted">Pendapatan Hari Ini</h6>
-              <h4>Rp {{ number_format($todayIncome,0,',','.') }}</h4>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 text-muted">Total Vendor</h6>
-              <h4>{{ $totalVendors }}</h4>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-12 col-xl-8">
-          <div class="d-flex align-items-center justify-content-between mb-3">
-            <h5 class="mb-0">Unique Visitor</h5>
-            <ul class="nav nav-pills justify-content-end mb-0" id="chart-tab-tab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="chart-tab-home-tab" data-bs-toggle="pill" data-bs-target="#chart-tab-home" type="button" role="tab" aria-controls="chart-tab-home" aria-selected="true">Month</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="chart-tab-profile-tab" data-bs-toggle="pill" data-bs-target="#chart-tab-profile" type="button" role="tab" aria-controls="chart-tab-profile" aria-selected="false">Week</button>
-              </li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <div class="tab-content" id="chart-tab-tabContent">
-                <div class="tab-pane" id="chart-tab-home" role="tabpanel" aria-labelledby="chart-tab-home-tab" tabindex="0">
-                  <div id="visitor-chart-1"></div>
-                </div>
-                <div class="tab-pane show active" id="chart-tab-profile" role="tabpanel">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5>Grafik Penjualan 7 Hari</h5>
-                      <canvas id="salesChart"></canvas>
-                    </div>
+        <!-- Row 1 -->
+          <div class="col-md-6 col-xl-4">
+              <div class="card bg-primary text-white">
+                  <div class="card-body">
+                      <h6 class="mb-2 text-white">Total Produk</h6>
+                      <h4>{{ $totalProducts }}</h4>
                   </div>
               </div>
-            </div>
           </div>
-        </div>
+
+          <div class="col-md-6 col-xl-4">
+              <div class="card bg-info text-white">
+                  <div class="card-body">
+                      <h6 class="mb-2 text-white">Transaksi Hari Ini</h6>
+                      <h4>{{ $totalTransactionsToday }}</h4>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 col-xl-4">
+              <div class="card bg-danger text-white">
+                  <div class="card-body">
+                      <h6 class="mb-2 text-white">Transaksi Bulan Ini</h6>
+                      <h4>{{ $totalTransactionsMonth }}</h4>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="col-md-6 col-xl-6">
+              <div class="card bg-success text-white">
+                  <div class="card-body">
+                      <h6 class="mb-2 text-white">Pendapatan Hari Ini</h6>
+                      <h4>Rp {{ number_format($todayIncome,0,',','.') }}</h4>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 col-xl-6">
+              <div class="card bg-warning text-white">
+                  <div class="card-body">
+                      <h6 class="mb-2 text-white">Pendapatan Bulan Ini</h6>
+                      <h4>Rp {{ number_format($monthIncome,0,',','.') }}</h4>
+                  </div>
+              </div>
+          </div>
 
       <div class="row">
 
@@ -125,33 +106,6 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $product->product_name }}</td>
                     <td>{{ $product->total_sold }} barang</td>
-                  </tr>
-                  @endforeach
-                </tbody>
-
-              </table>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-md-6">
-          <h5 class="mb-3">Produk Stok Hampir Habis</h5>
-          <div class="card">
-            <div class="card-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Produk</th>
-                    <th>Stock</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  @foreach($lowStockProducts as $product)
-                  <tr>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->stock }}</td>
                   </tr>
                   @endforeach
                 </tbody>
