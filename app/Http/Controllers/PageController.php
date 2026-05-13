@@ -35,9 +35,10 @@ class PageController extends Controller
 
         $topProducts = TransactionItem::select(
                 'product_name',
+                'class_type',
                 DB::raw('SUM(qty) as total_sold')
             )
-            ->groupBy('product_name')
+            ->groupBy('product_name', 'class_type')
             ->orderByDesc('total_sold')
             ->get();
 
