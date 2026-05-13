@@ -85,38 +85,7 @@
 
 
         </ul>
-        {{-- UI Components - semua role bisa akses --}}
-        <li class="pc-item pc-caption">
-            <label>UI Components</label>
-        </li>
-
-        <li class="pc-item">
-            <a href="{{ url('/home/icon-tabler') }}" class="pc-link {{ request()->is('home/icon-tabler') ? 'active' : '' }}">
-                <span class="pc-micon"><i class="ti ti-plant-2"></i></span>
-                <span class="pc-mtext">Icons</span>
-            </a>
-        </li>
-
-        <li class="pc-item">
-            <a href="{{ url('/home/bc_typography') }}" class="pc-link {{ request()->is('home/bc_typography') ? 'active' : '' }}">
-                <span class="pc-micon"><i class="ti ti-typography"></i></span>
-                <span class="pc-mtext">Typography</span>
-            </a>
-        </li>
-
-        <li class="pc-item">
-            <a href="{{ url('/home/bc_color') }}" class="pc-link {{ request()->is('home/bc_color') ? 'active' : '' }}">
-                <span class="pc-micon"><i class="ti ti-color-swatch"></i></span>
-                <span class="pc-mtext">Color</span>
-            </a>
-        </li>
-
-        <li class="pc-item">
-            <a href="{{ url('/home/sample-page') }}" class="pc-link {{ request()->is('home/sample-page') ? 'active' : '' }}">
-                <span class="pc-micon"><i class="ti ti-brand-chrome"></i></span>
-                <span class="pc-mtext">Sample Page</span>
-            </a>
-        </li>
+        
       </div>
     </div>
   </nav>
@@ -306,7 +275,8 @@
   <div class="pc-container">
     <div class="pc-content">
         @yield('content')
-
+      </div>
+  </div>
       <!-- [ Main Content ] end -->
   <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">
