@@ -25,10 +25,7 @@ Route::middleware('auth')->group(function () {
 
     // HALAMAN UMUM
     Route::get('/home', [PageController::class, 'home']);
-    Route::get('/home/icon-tabler', [PageController::class, 'iconTabler']);
-    Route::get('/home/bc_typography', [PageController::class, 'typography']);
-    Route::get('/home/bc_color', [PageController::class, 'color']);
-    Route::get('/home/sample-page', [PageController::class, 'samplePage']);
+    
 
     // ================= ADMIN =================
     Route::middleware('role:admin')->group(function () {
