@@ -2,6 +2,7 @@
 @section('title', 'POS Kasir')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="row">
 
     {{-- LIST DATA KELAS --}}
@@ -325,31 +326,74 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.setorUang = function () {
-        if (!confirm("Yakin ingin menyetor hari ini?")) return;
 
-        fetch("/kasir/setor", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message);
-            location.reload();
+        Swal.fire({
+            title: 'Konfirmasi Setor',
+            text: 'Yakin ingin menyetor hari ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Setor',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#00ff00',
+            cancelButtonColor: '#ff0303'
+        }).then((result) => {
+
+            if (!result.isConfirmed) return;
+
+            fetch("/kasir/setor", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: data.message,
+                    confirmButtonColor: '#0141cb'
+                }).then(() => {
+                    location.reload();
+                });
+
+            })
+            .catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Terjadi kesalahan saat setor uang'
+                });
+            });
+
         });
     }
 
     window.payNow = function () {
         if (cart.length === 0) {
-            alert("Keranjang kosong");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Keranjang Kosong',
+                text: 'Silakan tambahkan kelas ke keranjang sebelum membayar',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#ff0707'
+            });
             return;
         }
 
         let studentName = document.getElementById('student-name').value;
-        if(studentName == ''){
-            alert("Nama siswa / wali murid wajib diisi");
+
+        if (studentName === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Data Belum Lengkap',
+                text: 'Nama siswa / wali murid wajib diisi',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#2563eb'
+            });
+
             return;
         }
 
@@ -373,7 +417,13 @@ document.addEventListener("DOMContentLoaded", function () {
         let pay = parseInt(payInput.value.replace(/\./g,'')) || 0;
 
         if (pay < total) {
-            alert("Nominal bayar kurang");
+            Swal.fire({
+                icon: 'error',
+                title: 'Pembayaran Gagal',
+                text: 'Nominal bayar kurang dari total pembayaran',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#ff0707'
+            });
             return;
         }
 
@@ -400,20 +450,43 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(data);
 
             if(data.error){
-                alert(data.error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Pembayaran Gagal',
+                    text: data.error,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ff0707'
+                });
                 return;
             }
 
             if(data.transaction_id){
-                window.location.href = "/kasir/receipt/" + data.transaction_id + "?from=pos";
-            }else{
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pembayaran Berhasil',
+                    text: 'Transaksi berhasil diproses',
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href =
+                        "/kasir/receipt/" + data.transaction_id + "?from=pos";
+                });
+
+            } else {
                 alert("Transaksi gagal tanpa pesan");
             }
 
         })
         .catch(err => {
             console.log(err);
-            alert("Terjadi kesalahan checkout");
+            Swal.fire({
+                icon: 'error',
+                title: 'Pembayaran Gagal',
+                text: 'Terjadi kesalahan saat memproses transaksi',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#ff0707'
+            });
         });
     }
 
