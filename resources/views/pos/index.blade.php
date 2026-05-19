@@ -35,8 +35,8 @@
                 <div class="mb-3">
                     <strong>No. :</strong>
                     <span>
-                        KW-{{ date('Ymd') }}-
-                        <span id="invoice-no">{{ rand(100,999) }}</span>
+                       <span id="invoice-display" class="text-success fw-bold">
+                        {{ $nextInvoice }}
                     </span>
                 </div>
 
@@ -461,6 +461,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if(data.transaction_id){
+                document.getElementById('invoice-display').innerText =
+                    data.invoice;
 
                 Swal.fire({
                     icon: 'success',

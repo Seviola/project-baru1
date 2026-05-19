@@ -37,11 +37,41 @@ class PosController extends Controller
             ->where('is_deposited', 0)
             ->sum('total');
 
+        $lastTransaction = Transaction::latest()->first(); /*invoice tidak riset 1 tahun atau 1 bulan sekali kwitansi*/
+        $nextNumber = 1;
+
+        if ($lastTransaction) {
+            $lastNumber = (int) substr($lastTransaction->invoice, 0, 3);
+            $nextNumber = $lastNumber + 1;
+        }
+
+        $invoiceNumber = str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+        $romanMonths = [
+            1 => 'I',
+            2 => 'II',
+            3 => 'III',
+            4 => 'IV',
+            5 => 'V',
+            6 => 'VI',
+            7 => 'VII',
+            8 => 'VIII',
+            9 => 'IX',
+            10 => 'X',
+            11 => 'XI',
+            12 => 'XII'
+        ];
+
+        $monthRoman = $romanMonths[now()->month];
+
+        $nextInvoice = $invoiceNumber . '/' . $monthRoman . '/EDU/' . now()->year;
+
         return view('pos.index', compact(
             'products',
             'totalToday',
             'alreadyDeposited',
-            'notDeposited'
+            'notDeposited',
+            'nextInvoice'
         ));
     }
 
@@ -94,8 +124,41 @@ class PosController extends Controller
                 'items' => 'required|array'
             ]);
 
+            $lastTransaction = Transaction::latest()->first(); /*invoice tidak riset 1 tahun atau 1 bulan sekali tampilan POS*/
+            $nextNumber = 1;
+            if ($lastTransaction) {
+                // Ambil nomor depan invoice lama
+                $lastNumber = (int) substr($lastTransaction->invoice, 0, 3);
+                $nextNumber = $lastNumber + 1;
+            }
+
+            // Format 001, 002, dst
+            $invoiceNumber = str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+            // Bulan romawi
+            $romanMonths = [
+                1 => 'I',
+                2 => 'II',
+                3 => 'III',
+                4 => 'IV',
+                5 => 'V',
+                6 => 'VI',
+                7 => 'VII',
+                8 => 'VIII',
+                9 => 'IX',
+                10 => 'X',
+                11 => 'XI',
+                12 => 'XII'
+            ];
+
+            $monthRoman = $romanMonths[now()->month];
+
+            // Hasil akhir invoice
+            $invoiceCode = $invoiceNumber . '/' . $monthRoman . '/EDU/' . now()->year;
+
+            // SIMPAN TRANSAKSI//
             $transaction = Transaction::create([
-                'invoice' => 'KW-' . date('YmdHis'),
+                'invoice' => $invoiceCode,
                 'student_name' => $request->student_name,
                 'payment_method' => $request->payment_method,
                 'total' => $request->total,
@@ -121,7 +184,8 @@ class PosController extends Controller
             }
 
             return response()->json([
-                'transaction_id' => $transaction->id
+                'transaction_id' => $transaction->id,
+                'invoice' => $transaction->invoice
             ]);
 
         } catch (\Exception $e) {

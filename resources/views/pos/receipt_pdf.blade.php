@@ -402,6 +402,14 @@
             {{ date('d F Y', strtotime($transaction->created_at)) }}
 
             <div class="signature-line"></div>
+            <div style="
+                margin-top:6px;
+                font-size:13px;
+                font-weight:bold;
+                color:#2f2f7f;
+                ">
+                ( {{ $transaction->user->name }} )
+            </div>
         </div>
     </div>
 </div>
