@@ -96,9 +96,17 @@
         /* supaya sejajar */
         .social-row{
             width:100%;
+            margin-top:4px;
             border-collapse:collapse;
-            border-spacing:0;
-            margin-top:2px;
+        }
+
+        .social-row td{
+            font-size:9px;
+            color:#2f2f7f;
+            padding:1px 4px;
+            white-space:nowrap;
+            text-align:left;
+            font-weight:bold;
         }
 
         .social-row td{
@@ -113,13 +121,19 @@
             white-space:nowrap; /* biar tidak turun baris */
         }
 
+        .icon{
+            width:9px;
+            height:9px;
+            vertical-align:middle;
+            margin-right:3px;
+        }
+
         /* biru */
         .bottom-line{
             position:absolute;
             left:0;
             right:0;
             bottom:0;
-
             height:3px;
             background:#2f2f7f;
         }
@@ -305,12 +319,21 @@
                      <table class="social-row">
                         <tr>
                             <td>☎ (031) 5315678</td>
-                            <td>Instagram : @scomptec_learning</td>
+                            <td>
+                                <img src="{{ public_path('assets/images/instagram.png') }}" class="icon">
+                                @scomptec_learning
+                            </td>
                         </tr>
 
                         <tr>
-                            <td>Facebook : scomptec-learning</td>
-                            <td>TikTok : scomptec.official</td>
+                            <td>
+                                <img src="{{ public_path('assets/images/facebook.png') }}" class="icon">
+                                scomptec-learning
+                            </td>
+                            <td>
+                                <img src="{{ public_path('assets/images/tik-tok.png') }}" class="icon">
+                                scomptec.official
+                            </td>
                         </tr>
                     </table>
                 </div>

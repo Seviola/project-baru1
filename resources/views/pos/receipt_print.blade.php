@@ -9,13 +9,20 @@
             margin: 0;
         }
 
-        body{
-            margin:0;
+         html, body{
+            width:20.5cm;
+            height:10.8cm;
+            margin:auto;
             padding:0;
+            overflow:hidden;
+            background:#d9d9d9;
             font-family:DejaVu Sans, sans-serif;
-            font-size:12px;
-            color:#2f2f7f;
-            background:#fff;
+        }
+
+        body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
         }
 
         .wrapper{
@@ -23,7 +30,8 @@
             height:10.8cm;
             overflow:hidden;
             position:relative;
-            margin:auto;
+            background:#fff;
+            box-shadow:0 0 8px rgba(0,0,0,0.15);
         }
 
         /* SIDEBAR KIRI */
@@ -34,6 +42,7 @@
             width:3.5cm;
             height:10.8cm;
             border-right:2px solid #2f2f7f;
+            box-sizing:border-box;
         }
 
         .sidebar-inner{
@@ -95,6 +104,13 @@
             line-height:1.1;
             text-align:center;
             white-space:nowrap;
+        }
+
+        .icon{
+            width:10px;
+            height:10px;
+            vertical-align:middle;
+            margin-right:3px;
         }
 
         /* CONTENT */
@@ -262,12 +278,21 @@ window.onafterprint = function(){
                     <table class="social-row">
                         <tr>
                             <td>☎ (031) 5315678</td>
-                            <td>Instagram : @scomptec_learning</td>
+                            <td>
+                                <img src="{{ asset('assets/images/instagram.png') }}" class="icon">
+                                @scomptec_learning
+                            </td>
                         </tr>
 
                         <tr>
-                            <td>Facebook : scomptec-learning</td>
-                            <td>TikTok : scomptec.official</td>
+                            <td>
+                                <img src="{{ asset('assets/images/facebook.png') }}" class="icon">
+                                scomptec-learning
+                            </td>
+                            <td>
+                                <img src="{{ asset('assets/images/tik-tok.png') }}" class="icon">
+                                scomptec.official
+                            </td>
                         </tr>
                     </table>
 
