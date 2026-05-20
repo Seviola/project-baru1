@@ -67,11 +67,15 @@
             align-items:center;
             justify-content:center;
             height:100%;
+            transform:translateY(0.25cm);
         }
 
         .logo-area{
-            width:11cm;
-            text-align:center;
+            width:8cm; /* kecilkan gambar */
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:0 auto; /* posisi tetap di tengah */
         }
 
         .logo{
@@ -143,6 +147,7 @@
             margin-bottom:22px;
             display:flex;
             align-items:center;
+            color:#2f2f7f;
         }
 
         .box-title{
@@ -171,6 +176,7 @@
             width:170px;
             font-size:12px;
             white-space:nowrap; /* tulisan tetap sejajar */
+            color:#2f2f7f;
         }
 
         .colon{
@@ -181,17 +187,15 @@
         .fill-line{
             display:flex;
             align-items:center;
-            height:22px;
-            width:calc(100% - 7cm); /* paksa sama panjang */
-            max-width:12cm;
+            min-height:22px;
             border-bottom:1px dotted #9b9bc7;
             padding:0 6px 2px 6px;
-            box-sizing:border-box;
             font-weight:bold;
             font-size:13px;
             color:#2f2f7f;
             white-space:nowrap; /* jawaban tidak turun */
-            overflow:hidden;
+            min-width:250px;
+            max-width:12cm;
         }
 
         .payment-box{
@@ -201,6 +205,7 @@
         .checkbox{
             font-size:14px;
             margin-right:28px;
+            color:#2f2f7f;
         }
 
         .signature{
@@ -213,7 +218,7 @@
         }
 
         .signature-line{
-            border-bottom:1px dotted #2f2f7f;
+            border-bottom:1px dotted #9b9bc7;
             margin-top:45px;
         }
 
@@ -387,7 +392,7 @@ window.onafterprint = function(){
         <!-- TTD -->
         <div class="signature">
 
-            Surabaya,
+            Tanggal,
             {{ date('d F Y', strtotime($transaction->created_at)) }}
 
             <div class="signature-line"></div>
@@ -397,7 +402,7 @@ window.onafterprint = function(){
                 font-weight:bold;
                 color:#2f2f7f;
                 ">
-                ( {{ $transaction->user->name }} )
+                {{ $transaction->user->name }} 
             </div>
         </div>
     </div>
