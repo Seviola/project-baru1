@@ -37,7 +37,7 @@
 
         .sidebar-inner{
             position:absolute;
-            top:0;
+            top:o; 
             left:0;
             width:10.8cm;
             height:3.5cm;
@@ -61,12 +61,16 @@
             align-items:center;
             justify-content:center;
             height:100%;
+            transform:translateY(0.5cm);
         }
 
         /* Logo diperbesar */
         .logo-area{
-            width:11cm; /*ubah ukuran gambar*/
-            text-align:center;
+            width:8cm; /* kecilkan gambar */
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:0 auto; /* posisi tetap di tengah */
         }
 
         .logo{
@@ -408,7 +412,7 @@
                 font-weight:bold;
                 color:#2f2f7f;
                 ">
-                ( {{ $transaction->user->name }} )
+                {{ $transaction->user->name }}
             </div>
         </div>
     </div>
